@@ -2,6 +2,7 @@
 
 namespace Prokl\ServiceProvider\Micro;
 
+use Exception;
 use Prokl\ServiceProvider\Framework\SymfonyCompilerPassBagLight;
 use Prokl\ServiceProvider\ServiceProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,7 +34,7 @@ class AbstractStandaloneServiceProvider extends ServiceProvider
      *
      * @param string $filename Конфиг.
      *
-     * @throws \Exception Ошибка инициализации контейнера.
+     * @throws Exception Ошибка инициализации контейнера.
      */
     public function __construct(
         string $filename

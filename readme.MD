@@ -61,6 +61,47 @@ $serviceProvider = new ServiceProvider(
 
 ## Сепаратные микро-контейнеры
 
+Отдельные контейнеры - со своим конфигом, полностью изолированные (для модулей, плагинов и т.п.).
+
+```php
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Prokl\ServiceProvider\Micro\AbstractStandaloneServiceProvider;
+
+class ExampleMicroServiceProvider extends AbstractStandaloneServiceProvider
+{
+    /**
+     * @var ContainerBuilder $containerBuilder Контейнер.
+     */
+    protected static $containerBuilder;
+
+    /**
+     * @var string $pathBundlesConfig Путь к конфигурации бандлов.
+     */
+    protected $pathBundlesConfig = '/src/Micro/example.config/standalone_bundles.php';
+
+    /**
+     * @var string $configDir Папка, где лежат конфиги.
+     */
+    protected $configDir = '/src/Micro/example.config/example.config/example.yaml';
+}
+```
+
+Где надо - инициализация:
+
+```php
+$micro = new ExampleMicroServiceProvider(
+    'src/SymfonyDI/Micro/example.config/example.yaml',
+    $_ENV['APP_ENV'],
+    (bool)$_ENV['APP_DEBUG']
+);
+```
+
+Хэлпер `container` заточен под работу с микро-сервис-провайдерами:
+
+```php
+var_dump(container($micro)->getParameter('example'));
+```
+
 ## Автозапуск сервисов
 
 Чтобы сервис запустился автоматически после инициализации контейнера, он должен быть помечен тэгом `service.bootstrap`.
