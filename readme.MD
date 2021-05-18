@@ -177,6 +177,17 @@ Local\PostTypes\InstagramPostType:
     tags:
       - { name: twig.extension }
 ```
+
+## Сервисы по умолчанию
+
+Автоматом регистрируются несколько сервисов:
+
+- `service_container` (и alias) - сервис-контейнер целиком
+- `app.request` - конвертор глобалов в Request
+- `custom.post.type.registrator` - регистратор кастомных типов постов в Wordpress
+- синонимы сервиса `kernel`.
+ 
+
 ## Хэлперы
 
 1) `container()` - отдает экземпляр контейнера (выступает в роли сервис-локатора):
