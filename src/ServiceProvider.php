@@ -720,6 +720,7 @@ class ServiceProvider
 
         try {
             $loader->load($_SERVER['DOCUMENT_ROOT'] . '/' . $fileName);
+            $loader->load(__DIR__ . '/../config/base.yaml');
             return true;
         } catch (Exception $e) {
             $this->errorHandler->die('Сервис-контейнер: ' . $e->getMessage());

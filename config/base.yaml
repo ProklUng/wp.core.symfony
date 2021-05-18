@@ -1,0 +1,11 @@
+services:
+  # конфигурация по умолчанию в *этом* файле
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Prokl\ServiceProvider\ServiceProvider: ~
+
+  # Прямой алиас сервис-контейнера Symfony. @service_container - deprecated.
+  Psr\Container\ContainerInterface: '@service_container'
