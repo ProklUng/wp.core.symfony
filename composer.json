@@ -17,7 +17,10 @@
   "autoload": {
     "psr-4": {
       "Prokl\\ServiceProvider\\": "src"
-    }
+    },
+    "files": [
+      "functions/container.php"
+    ]
   },
   "require": {
     "php": ">=7.3 | ~8",

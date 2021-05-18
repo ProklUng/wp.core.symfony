@@ -80,3 +80,11 @@ Local\Events\CometCacheClearMemcachedEvent:
     tags:
       - { name: 'custom.events.init', event: 'post_class', method: 'handler', type: 'add_filter',  priority: 100 }
 ```
+
+## Хэлперы
+
+1) `container()` - отдает экземпляр контейнера (выступает в роли сервис-локатора):
+
+```php
+$kernel = container()->get('kernel');
+```
