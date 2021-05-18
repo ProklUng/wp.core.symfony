@@ -54,3 +54,29 @@ $serviceProvider = new ServiceProvider(
 Папка, где лежат конфигурации - `/config`. Конфигурации бандлов - `/config/packages`. 
 
 ## Сепаратные микро-контейнеры
+
+## Автозапуск сервисов
+
+Чтобы сервис запустился автоматически после инициализации контейнера, он должен быть помечен тэгом `service.bootstrap`.
+
+```yaml
+  app.options:
+    class: Local\Services\AppOptions
+    arguments: ['%kernel.environment%', '@parameter_bag']
+    tags: ['service.bootstrap']
+```
+
+## Автоматическая подвязка на хуки Wordpress
+
+Тэг: `custom.events.init`.
+
+1) `type` - add_action, add_filter & etc По умолчанию: `add_action`.
+2) `event` - название хука.
+3) `method` - метод-обработчик в сервисе
+4) `priority` - приоритет
+
+```yaml
+Local\Events\CometCacheClearMemcachedEvent:
+    tags:
+      - { name: 'custom.events.init', event: 'post_class', method: 'handler', type: 'add_filter',  priority: 100 }
+```

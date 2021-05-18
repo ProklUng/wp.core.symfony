@@ -72,15 +72,11 @@ class InitWordpressHooks implements PostLoadingPassInterface
 
         foreach ($arData as $item) {
             if (!$item) {
-                throw new RuntimePostLoadingPassException(
-                    'InitEvents PostLoadingPass: params void.'
-                );
+                throw new RuntimePostLoadingPassException('InitEvents PostLoadingPass: params void.');
             }
 
             if (!$item['event']) {
-                throw new RuntimePostLoadingPassException(
-                    'InitEvents PostLoadingPass: name event apsent.'
-                );
+                throw new RuntimePostLoadingPassException('InitEvents PostLoadingPass: name event apsent.');
             }
 
             /**

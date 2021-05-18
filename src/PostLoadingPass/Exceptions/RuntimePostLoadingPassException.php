@@ -7,7 +7,7 @@ use Prokl\BaseException\BaseException;
 /**
  * Class RuntimePostLoadingPassException
  * Runtime исключения PostLoadingPass.
- * @package Fedy\Services\Exceptions
+ * @package Prokl\ServiceProvider\PostLoadingPass\Exceptions
  *
  * @since 26.09.2020
  */
