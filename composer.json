@@ -1,0 +1,42 @@
+{
+  "name": "proklung/wp-core-symfony",
+  "description": "Core Symfony functionality for Wordpress",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gavrilov Fedy",
+      "email": "fedor.gavrilov.75@mail.ru"
+    }
+  ],
+
+  "support": {
+    "issues": "https://github.com/ProklUng/wp.core.symfony/issues",
+    "source": "https://github.com/ProklUng/wp.core.symfony"
+  },
+  "autoload": {
+    "psr-4": {
+      "Prokl\\ServiceProvider\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=7.3 | ~8",
+    "symfony/dependency-injection": "^4.0 || ^5.0",
+    "symfony/http-kernel": "^4.0 || ^5.0",
+    "symfony/config": "~4|~5",
+    "symfony/framework-bundle": "^4.0 || ^5.0",
+    "symfony/filesystem": "^4.0 || ^5.0",
+    "symfony/routing": "^4.0 || ^5.0",
+    "symfony/http-foundation": "^4.0 || ^5.0",
+    "symfony/event-dispatcher": "^4.0 || ^5.0",
+    "symfony/property-access": "^4.0 || ^5.0",
+    "symfony/serializer": "^4.0 || ^5.0",
+    "symfony/console": "^4.0 || ^5.0",
+    "symfony/cache": "^4.0 || ^5.0",
+    "symfony/http-client": "^4.0 || ^5.0",
+    "symfony/proxy-manager-bridge": "^4.0 || ^5.0",
+    "symfony/validator": "^4.0 || ^5.0",
+    "symfony/dotenv": "^4.0 || ^5.0",
+    "symfony/expression-language": "^5.2"
+  }
+}
