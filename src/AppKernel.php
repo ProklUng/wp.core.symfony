@@ -55,7 +55,7 @@ class AppKernel extends Kernel
     protected $debug;
 
     /**
-     * @var string $projectDir DOCUMENT_ROOT. Определяется наличием composer.json.
+     * @var string $projectDir DOCUMENT_ROOT.
      */
     private $projectDir = '';
 
@@ -69,6 +69,7 @@ class AppKernel extends Kernel
     {
         $this->environment = $environment;
         $this->debug = $debug;
+        $this->projectDir = $_SERVER['DOCUMENT_ROOT'];
 
         $this->initializeBundles(); // Бандлы Symfony
         $this->registerStandaloneBundles(); // "Standalone" бандлы.
