@@ -23,6 +23,12 @@
       "functions/container.php"
     ]
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/proklung/wordpress-test-build"
+    }
+  ],
   "require": {
     "php": ">=7.3 | ~8",
     "symfony/dependency-injection": "^4.0 || ^5.0",
@@ -46,6 +52,6 @@
     "timber/timber": "^1.9"
   },
   "require-dev": {
-    "proklung/phpunit-testing-tools": "^1.0"
+    "proklung/wordpress-test-build": "^1.1"
   }
 }
