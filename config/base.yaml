@@ -9,3 +9,14 @@ services:
 
   # Прямой алиас сервис-контейнера Symfony. @service_container - deprecated.
   Psr\Container\ContainerInterface: '@service_container'
+
+  #############
+  # Wordpress
+  #############
+  # Регистратор кастомных типов постов.
+  custom.post.type.registrator:
+    class: Prokl\ServiceProvider\Services\PostTypes\PostTypeRegistrator
+    tags:
+      - { name: 'post.type.registrator'}
+
+  Prokl\ServiceProvider\Services\PostTypes\PostTypeRegistrator: '@custom.post.type.registrator'

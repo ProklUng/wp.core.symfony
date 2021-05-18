@@ -87,6 +87,42 @@ Local\Events\CometCacheClearMemcachedEvent:
       - { name: 'custom.events.init', event: 'post_class', method: 'handler', type: 'add_filter',  priority: 100 }
 ```
 
+## Автоматическая регистрация типов постов
+
+Тэг: `post.type`.
+
+Реализует интерфейс `PostTypeDataInterface` с двумя методами:
+
+- `getNameTypePost` - название типа поста
+- `getRegistrationData` - массив с традиционными для объявления типа поста данными. Типа такого:
+
+```php
+return [
+            'labels' => [
+                'name' => __('Instagram'),
+                'singular_name' => __('Instagram'),
+            ],
+
+            'public' => true,
+            'publicly_queryable' => true,
+            'show_ui' => true,
+            'show_in_menu' => true,
+            'query_var' => true,
+            'rewrite' => 'instagram',
+            'capability_type' => 'post',
+            'has_archive' => 'instagram',
+            'hierarchical' => false,
+            'menu_position' => null,
+            'supports' => ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'],
+        ];
+```
+
+```yaml
+Local\PostTypes\InstagramPostType:
+    tags:
+      - { name: 'post.type' }
+```
+
 ## Хэлперы
 
 1) `container()` - отдает экземпляр контейнера (выступает в роли сервис-локатора):
