@@ -16,7 +16,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Prokl\\ServiceProvider\\": "src"
+      "Prokl\\ServiceProvider\\": "src",
+      "Prokl\\ServiceProvider\\Tests\\": "tests"
     },
     "files": [
       "functions/container.php"
@@ -42,5 +43,8 @@
     "symfony/dotenv": "^4.0 || ^5.0",
     "symfony/expression-language": "4.0 || ^5.0",
     "proklung/base-exception": "^1.0"
+  },
+  "require-dev": {
+    "proklung/phpunit-testing-tools": "^1.0"
   }
 }
