@@ -22,7 +22,9 @@ use Twig\Extension\ExtensionInterface;
  */
 class TwigExtensionApply implements PostLoadingPassInterface
 {
-    /** @const string VARIABLE_PARAM_BAG Переменная в ParameterBag. */
+    /**
+     * @const string VARIABLE_PARAM_BAG Переменная в ParameterBag.
+     */
     private const VARIABLE_PARAM_BAG = '_twig_extension';
 
     /**

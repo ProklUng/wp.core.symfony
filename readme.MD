@@ -164,6 +164,19 @@ Local\PostTypes\InstagramPostType:
       - { name: 'post.type' }
 ```
 
+## Автоматическое подхватывание расширений Twig
+
+Посредством Timber. Тэг `twig.extension`.
+
+```yaml
+  service.twig.parameter:
+    class: Local\Bundles\ParameterBundle\Twig\ParameterExtension
+    public: true
+    arguments:
+      - '@service.parameter'
+    tags:
+      - { name: twig.extension }
+```
 ## Хэлперы
 
 1) `container()` - отдает экземпляр контейнера (выступает в роли сервис-локатора):
