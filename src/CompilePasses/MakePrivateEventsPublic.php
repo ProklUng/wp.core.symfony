@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @since 19.11.2020
  * @since 05.04.2021 Публичными делаюься и слушатели ядра.
  */
-class MakePrivateEventsPublic implements CompilerPassInterface
+final class MakePrivateEventsPublic implements CompilerPassInterface
 {
     /**
      * @inheritDoc
@@ -32,9 +32,7 @@ class MakePrivateEventsPublic implements CompilerPassInterface
      */
     private function makePublic(ContainerBuilder $container, string $nameTag) : void
     {
-        $taggedServices = $container->findTaggedServiceIds(
-            $nameTag
-        );
+        $taggedServices = $container->findTaggedServiceIds($nameTag);
 
         foreach ($taggedServices as $id => $service) {
             $def = $container->getDefinition($id);

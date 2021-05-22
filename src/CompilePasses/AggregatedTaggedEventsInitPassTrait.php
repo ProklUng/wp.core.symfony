@@ -15,13 +15,17 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * @since 06.11.2020 Добавление к уже существующим параметрам, а не перезаписывание. Позволяет бандлам
  * подмешивать свои добавления.
  */
-class AggregatedTaggedEventsInitPassTrait implements CompilerPassInterface
+final class AggregatedTaggedEventsInitPassTrait implements CompilerPassInterface
 {
-    /** @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий. */
-    protected const TAG_EVENTS_INIT_SERVICES = 'custom.events.init.trait';
+    /**
+     * @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий.
+     */
+    private const TAG_EVENTS_INIT_SERVICES = 'custom.events.init.trait';
 
-    /** @const string VARIABLE_CONTAINER Название переменной в контейнере. */
-    protected const VARIABLE_CONTAINER = '_events_trait';
+    /**
+     * @const string VARIABLE_CONTAINER Название переменной в контейнере.
+     */
+    private const VARIABLE_CONTAINER = '_events_trait';
 
     /**
      * Движуха.

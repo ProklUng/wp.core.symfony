@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *
  * @since 27.09.2020
  */
-class RegisterCustomPostType implements PostLoadingPassInterface
+final class RegisterCustomPostType implements PostLoadingPassInterface
 {
     /**
      * @const string SERVICE_REGISTRATOR Сервис-регистратор кастомных типов постов.

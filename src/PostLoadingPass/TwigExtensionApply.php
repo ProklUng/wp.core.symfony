@@ -20,7 +20,7 @@ use Twig\Extension\ExtensionInterface;
  * @since 11.10.2020
  * @since 27.10.2020 Доработка.
  */
-class TwigExtensionApply implements PostLoadingPassInterface
+final class TwigExtensionApply implements PostLoadingPassInterface
 {
     /**
      * @const string VARIABLE_PARAM_BAG Переменная в ParameterBag.
@@ -40,7 +40,7 @@ class TwigExtensionApply implements PostLoadingPassInterface
             return $result;
         }
 
-        if (!$twigExtensionsServices) {
+        if (count($twigExtensionsServices) === 0) {
             return $result;
         }
 

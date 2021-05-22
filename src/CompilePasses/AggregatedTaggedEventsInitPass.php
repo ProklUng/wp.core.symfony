@@ -16,13 +16,17 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * подмешивать свои добавления.
  * @since 09.11.2020 Убрал ранний возврат при отсутствии тэгов.
  */
-class AggregatedTaggedEventsInitPass implements CompilerPassInterface
+final class AggregatedTaggedEventsInitPass implements CompilerPassInterface
 {
-    /** @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий. */
-    protected const TAG_EVENTS_INIT_SERVICES = 'custom.events.init';
+    /**
+     * @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий.
+     */
+    private const TAG_EVENTS_INIT_SERVICES = 'custom.events.init';
 
-    /** @const string VARIABLE_CONTAINER Название переменной в контейнере. */
-    protected const VARIABLE_CONTAINER = '_events';
+    /**
+     * @const string VARIABLE_CONTAINER Название переменной в контейнере.
+     */
+    private const VARIABLE_CONTAINER = '_events';
 
     /**
      * Движуха.
@@ -34,9 +38,7 @@ class AggregatedTaggedEventsInitPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container) : void
     {
-        $taggedServices = $container->findTaggedServiceIds(
-            self::TAG_EVENTS_INIT_SERVICES
-        );
+        $taggedServices = $container->findTaggedServiceIds(self::TAG_EVENTS_INIT_SERVICES);
 
         $params = $container->hasParameter(self::VARIABLE_CONTAINER) ?
             (array)$container->getParameter(self::VARIABLE_CONTAINER)

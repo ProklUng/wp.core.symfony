@@ -18,12 +18,16 @@ use Symfony\Component\DependencyInjection\Container;
  * @since 26.09.2020
  * @since 27.09.2020 Доработки.
  */
-class InitWordpressHooks implements PostLoadingPassInterface
+final class InitWordpressHooks implements PostLoadingPassInterface
 {
-    /** @const string METHOD_INIT_EVENT Метод, инициализирующий события. */
+    /**
+     * @const string METHOD_INIT_EVENT Метод, инициализирующий события.
+     */
     private const METHOD_INIT_EVENT = 'addEvent';
 
-    /** @const string VARIABLE_PARAM_BAG Переменная в ParameterBag. */
+    /**
+     * @const string VARIABLE_PARAM_BAG Переменная в ParameterBag.
+     */
     private const VARIABLE_PARAM_BAG = '_events';
 
     /**

@@ -15,11 +15,15 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  */
 class CustomEventsPass implements CompilerPassInterface
 {
-    /** @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий. */
-    protected const TAG_EVENTS_INIT_SERVICES = 'custom.symfony.event.listener';
+    /**
+     * @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий.
+     */
+    private const TAG_EVENTS_INIT_SERVICES = 'custom.symfony.event.listener';
 
-    /** @const string VARIABLE_CONTAINER Название переменной в контейнере. */
-    protected const VARIABLE_CONTAINER = '_symfony_events';
+    /**
+     * @const string VARIABLE_CONTAINER Название переменной в контейнере.
+     */
+    private const VARIABLE_CONTAINER = '_symfony_events';
 
     /**
      * Движуха.

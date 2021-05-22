@@ -17,13 +17,17 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * подмешивать свои добавления.
  * @since 09.11.2020 Убрал ранний возврат при отсутствии тэгов.
  */
-class AggregatedTaggedServicesPass implements CompilerPassInterface
+final class AggregatedTaggedServicesPass implements CompilerPassInterface
 {
-    /** @const string TAG_BOOTSTRAP_SERVICES Тэг сервисов запускающихся при загрузке. */
-    protected const TAG_BOOTSTRAP_SERVICES = 'service.bootstrap';
+    /**
+     * @const string TAG_BOOTSTRAP_SERVICES Тэг сервисов запускающихся при загрузке.
+     */
+    private const TAG_BOOTSTRAP_SERVICES = 'service.bootstrap';
 
-    /** @const string VARIABLE_CONTAINER Название переменной в контейнере. */
-    protected const VARIABLE_CONTAINER = '_bootstrap';
+    /**
+     * @const string VARIABLE_CONTAINER Название переменной в контейнере.
+     */
+    private const VARIABLE_CONTAINER = '_bootstrap';
 
     /**
      * Движуха.

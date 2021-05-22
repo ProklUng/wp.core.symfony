@@ -17,7 +17,6 @@ class ContainerAwareCompilerPass implements CompilerPassInterface
      * automatically injects the Service Container into all your services that
      * implement Symfony\Component\DependencyInjection\ContainerAwareInterface.
      *
-     * @see \Prokl\ServiceProvider\Examples\DummyService
      * @inheritDoc
      */
     public function process(ContainerBuilder $container) : void

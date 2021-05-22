@@ -49,9 +49,7 @@ class BaseAggregatedTaggedServicesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $taggedServices = $container->findTaggedServiceIds(
-            $this->tag
-        );
+        $taggedServices = $container->findTaggedServiceIds($this->tag);
 
         $params = $container->hasParameter($this->nameSectionParameterBag) ?
             (array)$container->getParameter($this->nameSectionParameterBag)

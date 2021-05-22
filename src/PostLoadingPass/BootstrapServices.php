@@ -20,7 +20,9 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 class BootstrapServices implements PostLoadingPassInterface
 {
-    /** @const string VARIABLE_PARAM_BAG Переменная в ParameterBag. */
+    /**
+     * @const string VARIABLE_PARAM_BAG Переменная в ParameterBag.
+     */
     private const VARIABLE_PARAM_BAG = '_bootstrap';
 
     /**
@@ -30,12 +32,12 @@ class BootstrapServices implements PostLoadingPassInterface
     public function action(Container $containerBuilder) : bool
     {
         try {
-            $bootstrapServices = $containerBuilder->getParameter(self::VARIABLE_PARAM_BAG);
+            $bootstrapServices = (array)$containerBuilder->getParameter(self::VARIABLE_PARAM_BAG);
         } catch (InvalidArgumentException $e) {
             return false;
         }
 
-        if (!$bootstrapServices || !is_array($bootstrapServices)) {
+        if (count($bootstrapServices) === 0) {
             return false;
         }
 

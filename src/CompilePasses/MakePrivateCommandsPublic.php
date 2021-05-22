@@ -12,16 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @since 20.12.2020
  */
-class MakePrivateCommandsPublic implements CompilerPassInterface
+final class MakePrivateCommandsPublic implements CompilerPassInterface
 {
     /**
      * @inheritDoc
      */
     public function process(ContainerBuilder $container) : void
     {
-        $taggedServices = $container->findTaggedServiceIds(
-            'console.command'
-        );
+        $taggedServices = $container->findTaggedServiceIds('console.command');
 
         foreach ($taggedServices as $id => $service) {
             $def = $container->getDefinition($id);
