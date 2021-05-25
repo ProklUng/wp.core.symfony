@@ -9,6 +9,7 @@ services:
 
   # Прямой алиас сервис-контейнера Symfony. @service_container - deprecated.
   Psr\Container\ContainerInterface: '@service_container'
+  Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
 
   # Ядро.
   Symfony\Component\HttpKernel\KernelInterface: '@kernel'
