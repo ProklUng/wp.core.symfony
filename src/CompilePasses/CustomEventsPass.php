@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  *
  * @since 24.11.2020
  */
-class CustomEventsPass implements CompilerPassInterface
+final class CustomEventsPass implements CompilerPassInterface
 {
     /**
      * @const string TAG_EVENTS_INIT_SERVICES Тэг сервисов запускающихся для инициализации событий.
@@ -31,7 +31,7 @@ class CustomEventsPass implements CompilerPassInterface
      * @param ContainerBuilder $container Контейнер.
      *
      * @return void
-     * @throws Exception
+     * @throws Exception Когда проблемы с получением параметров из контейнера.
      */
     public function process(ContainerBuilder $container) : void
     {

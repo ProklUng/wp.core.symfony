@@ -11,7 +11,7 @@ namespace Prokl\ServiceProvider\Framework;
 interface SymfonyCompilerPassBagInterface
 {
     /**
-     * @param array $standartCompilerPasses
+     * @param array $standartCompilerPasses Стандартные compiler passes.
      *
      * @return void
      */

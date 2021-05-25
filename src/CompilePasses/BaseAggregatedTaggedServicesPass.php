@@ -15,9 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * подмешивать свои добавления.
  * @since 09.11.2020 Убрал ранний возврат при отсутствии тэгов.
  */
-class BaseAggregatedTaggedServicesPass implements CompilerPassInterface
+final class BaseAggregatedTaggedServicesPass implements CompilerPassInterface
 {
-    /** @var string $tag Искомый сервисный тэг. */
+    /**
+     * @var string $tag Искомый сервисный тэг.
+     */
     private $tag;
 
     /**
@@ -30,7 +32,7 @@ class BaseAggregatedTaggedServicesPass implements CompilerPassInterface
      * BaseAggregatedTaggedServicesPass constructor.
      *
      * @param string $tag                     Искомый сервисный тэг.
-     * @param string $nameSectionParameterBag Название раздела в ParameterBag
+     * @param string $nameSectionParameterBag Название раздела в ParameterBag.
      */
     public function __construct(
         string $tag,

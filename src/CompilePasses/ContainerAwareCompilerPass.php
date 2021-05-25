@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
  * Class ContainerAwareCompilerPass
  * @package Prokl\ServiceProvider\CompilePasses
  */
-class ContainerAwareCompilerPass implements CompilerPassInterface
+final class ContainerAwareCompilerPass implements CompilerPassInterface
 {
     /**
      * automatically injects the Service Container into all your services that

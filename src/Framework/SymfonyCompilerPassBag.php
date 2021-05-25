@@ -17,7 +17,7 @@ use Symfony\Component\Validator\DependencyInjection\AddConstraintValidatorsPass;
  *
  * @since 04.04.2021
  */
-class SymfonyCompilerPassBag extends AbstractSymfonyCompilerPassBag
+final class SymfonyCompilerPassBag extends AbstractSymfonyCompilerPassBag
 {
     /**
      * @var array $standartCompilerPasses Пассы Symfony.

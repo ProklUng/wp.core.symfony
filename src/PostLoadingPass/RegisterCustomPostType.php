@@ -25,8 +25,6 @@ final class RegisterCustomPostType implements PostLoadingPassInterface
 
     /**
      * @inheritDoc
-     *
-     * @return boolean
      */
     public function action(Container $containerBuilder) : bool
     {

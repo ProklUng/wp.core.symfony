@@ -26,7 +26,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfiguration
  */
 class BundlesLoader
 {
-    /** @const string PATH_BUNDLES_CONFIG Путь к конфигурационному файлу. */
+    /**
+     * @const string PATH_BUNDLES_CONFIG Путь к конфигурационному файлу.
+     */
     private const PATH_BUNDLES_CONFIG = '/config/standalone_bundles.php';
 
     /**
@@ -169,6 +171,8 @@ class BundlesLoader
      * Boot bundles.
      *
      * @param ContainerInterface $container Контейнер.
+     *
+     * @return void
      *
      * @since 11.11.2020
      */

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  * @since 27.09.2020 Доработки.
  * @since 04.05.2021 Исключения сервисов автозагрузки больше не глушатся.
  */
-class BootstrapServices implements PostLoadingPassInterface
+final class BootstrapServices implements PostLoadingPassInterface
 {
     /**
      * @const string VARIABLE_PARAM_BAG Переменная в ParameterBag.
@@ -27,7 +27,7 @@ class BootstrapServices implements PostLoadingPassInterface
 
     /**
      * @inheritDoc
-     * @throws Exception
+     * @throws Exception Когда проблемы с получением сервиса из контейнера.
      */
     public function action(Container $containerBuilder) : bool
     {

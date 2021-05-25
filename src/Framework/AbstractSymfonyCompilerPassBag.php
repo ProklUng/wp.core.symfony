@@ -16,9 +16,7 @@ class AbstractSymfonyCompilerPassBag implements SymfonyCompilerPassBagInterface
     protected $standartCompilerPasses = [];
 
     /**
-     * @param array $standartCompilerPasses
-     *
-     * @return void
+     * @inheritDoc
      */
     public function setStandartCompilerPasses(array $standartCompilerPasses) : void
     {
@@ -26,7 +24,7 @@ class AbstractSymfonyCompilerPassBag implements SymfonyCompilerPassBagInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getStandartCompilerPasses(): array
     {

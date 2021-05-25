@@ -49,7 +49,8 @@ final class TwigExtensionApply implements PostLoadingPassInterface
                 $extension = $containerBuilder->get($service);
 
                 // Подвязывание Twig Extension.
-                add_filter('timber/twig',
+                add_filter(
+                    'timber/twig',
                     static function (Environment $twig) use ($extension) : Environment {
                         /** @var ExtensionInterface $extension */
                         try {
@@ -58,7 +59,8 @@ final class TwigExtensionApply implements PostLoadingPassInterface
                         }
 
                         return $twig;
-                });
+                    }
+                );
 
                 $result = true;
             } catch (Exception $e) {

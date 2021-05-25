@@ -37,7 +37,7 @@ class ShowErrorScreen
      *
      * @param string $errorMessage Текст сообщения.
      *
-     * @return bool|null
+     * @return boolean|null
      */
     public function die(string $errorMessage = '') : ?bool
     {

@@ -34,7 +34,7 @@ class ValidateServiceDefinitions implements CompilerPassInterface
      *
      * @inheritDoc
      *
-     * @throws Exception
+     * @throws Exception Когда проблемы с получением параметров из контейнера.
      */
     public function process(ContainerBuilder $container) : void
     {

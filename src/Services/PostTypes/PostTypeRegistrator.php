@@ -21,7 +21,7 @@ class PostTypeRegistrator
     /**
      * PostTypeRegistrator constructor.
      *
-     * @param PostTypeDataInterface ...$postTypeData
+     * @param PostTypeDataInterface ...$postTypeData Типы постов.
      */
     public function __construct(
         PostTypeDataInterface ...$postTypeData

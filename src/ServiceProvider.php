@@ -614,7 +614,7 @@ class ServiceProvider
                 $this->filesystem->mkdir($dir);
             } catch (IOExceptionInterface $exception) {
                 $this->errorHandler->die(
-                    "An error occurred while creating your directory at " . (string)$exception->getPath()
+                    'An error occurred while creating your directory at ' . (string)$exception->getPath()
                 );
             }
         }
@@ -625,7 +625,7 @@ class ServiceProvider
      *
      * @param string $fileName Имя конфигурационного Yaml файла.
      *
-     * @return bool|ContainerBuilder
+     * @return boolean|ContainerBuilder
      * @throws Exception Ошибки контейнера.
      *
      * @since 11.09.2020 Подключение возможности обработки событий HtppKernel через Yaml конфиг.
@@ -710,7 +710,7 @@ class ServiceProvider
      * @param ContainerBuilder $containerBuilder Контейнер.
      *
      * @return boolean
-     * @throws Exception
+     * @throws Exception Когда не удалось прочитать конфиг.
      *
      * @since 20.03.2021
      */
@@ -823,7 +823,8 @@ class ServiceProvider
                 continue;
             }
             static::$containerBuilder->addCompilerPass(
-                new $pass['pass'], $pass['phase'] ?? PassConfig::TYPE_BEFORE_OPTIMIZATION
+                new $pass['pass'],
+                $pass['phase'] ?? PassConfig::TYPE_BEFORE_OPTIMIZATION
             );
         }
     }
@@ -840,9 +841,9 @@ class ServiceProvider
     private function loadSymfonyBundles() : void
     {
         $this->bundlesLoader = new BundlesLoader(
-              static::$containerBuilder,
-              $this->pathBundlesConfig
-          );
+            static::$containerBuilder,
+            $this->pathBundlesConfig
+        );
 
         $this->bundlesLoader->load(); // Загрузить бандлы.
         $this->bundles = $this->bundlesLoader->bundles();
@@ -885,7 +886,7 @@ class ServiceProvider
      * Статический фасад получение контейнера.
      *
      * @param string $method Метод. В данном случае instance().
-     * @param mixed $args    Аргументы (конфигурационный файл).
+     * @param mixed  $args   Аргументы (конфигурационный файл).
      *
      *
      * @return mixed | void

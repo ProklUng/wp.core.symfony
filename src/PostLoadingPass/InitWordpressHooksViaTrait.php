@@ -64,7 +64,7 @@ final class InitWordpressHooksViaTrait implements PostLoadingPassInterface
     /**
      * Проверить - использует ли объект трэйт. Если да, то исполнить заданный метод.
      *
-     * @param mixed $object  Объект.
+     * @param mixed  $object Объект.
      * @param string $trait  Трэйт.
      * @param string $method Метод.
      *

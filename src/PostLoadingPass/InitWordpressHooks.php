@@ -33,8 +33,8 @@ final class InitWordpressHooks implements PostLoadingPassInterface
     /**
      * @inheritDoc
      *
-     * @throws RuntimePostLoadingPassException
-     * @throws Exception
+     * @throws RuntimePostLoadingPassException Когда что-то не так с параметрами событий.
+     * @throws Exception                       Когда проблемы с получением сервиса из контейнера.
      */
     public function action(Container $containerBuilder): bool
     {

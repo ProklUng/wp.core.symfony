@@ -36,9 +36,7 @@ class AbstractStandaloneServiceProvider extends ServiceProvider
      *
      * @throws Exception Ошибка инициализации контейнера.
      */
-    public function __construct(
-        string $filename
-    ) {
+    public function __construct(string $filename) {
         $this->symfonyCompilerClass = SymfonyCompilerPassBagLight::class;
 
         parent::__construct($filename);

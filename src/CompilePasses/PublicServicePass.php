@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @since 01.12.2020
  */
-class PublicServicePass implements CompilerPassInterface
+final class PublicServicePass implements CompilerPassInterface
 {
     /**
      * A regex to match the services that should be public.
@@ -29,7 +29,7 @@ class PublicServicePass implements CompilerPassInterface
      * Make services public that have an idea that matches a regex
      * $this->addCompilerPass(new PublicServicePass('|my_bundle.*|'));
      */
-    public function __construct($regex = '|.*|')
+    public function __construct(string $regex = '|.*|')
     {
         $this->regex = $regex;
     }

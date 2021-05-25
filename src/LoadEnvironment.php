@@ -13,6 +13,8 @@ class LoadEnvironment
 {
     /**
      * Загрузка конфигурации окружения.
+     *
+     * @return void
      */
     public function load() : void
     {
