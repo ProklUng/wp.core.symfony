@@ -43,9 +43,14 @@ use Prokl\ServiceProvider\ServiceProvider;
 $serviceProvider = new ServiceProvider(
     'app/symfony/services.yaml',
     $_ENV['APP_ENV'],
-    (bool)$_ENV['APP_DEBUG']
+    (bool)$_ENV['APP_DEBUG'],
+    '/config/bundles.php'
 );
 ```
+
+Для обеспечения "преемственности" (похожести) с оригиналом можно задать путь к файлу конфигурации
+ (скажем, `bundles.php`) бандлов четвертым (необязательным) параметром конструктора.
+
 ## Конфигурирование
 
 1) Опция `compile.container` в подтягиваемом конфиге - компилировать ли контейнер в файл. Если не задана, то "нет, не компилировать".
@@ -55,7 +60,8 @@ $serviceProvider = new ServiceProvider(
 
 ## Поддержка бандлов
 
-Файл конфигурации - `/config/standalone_bundles.php`.
+Файл конфигурации - `/config/standalone_bundles.php`. Этот путь можно изменить через конструктор.
+
 
 Папка, где лежат конфигурации - `/config`. Конфигурации бандлов - `/config/packages`. 
 

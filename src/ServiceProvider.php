@@ -177,20 +177,27 @@ class ServiceProvider
     /**
      * ServiceProvider constructor.
      *
-     * @param string  $filename    Конфигурационный Yaml файл.
-     * @param string  $environment Среда.
-     * @param boolean $debug       Режим отладки.
+     * @param string      $filename          Конфигурационный Yaml файл.
+     * @param string      $environment       Среда.
+     * @param boolean     $debug             Режим отладки.
+     * @param string|null $pathBundlesConfig Путь к конфигурации бандлов.
      *
      * @since 12.11.2020 Окружение и debug передаются снаружи.
+     * @since 01.06.2021 Путь к конфигурации бандлов можно задать снаружи.
      */
     public function __construct(
         string $filename = self::SERVICE_CONFIG_FILE,
         string $environment = 'dev',
-        bool $debug = true
+        bool $debug = true,
+        ?string $pathBundlesConfig = null
     ) {
         $this->filename = $filename;
         $this->errorHandler = new ShowErrorScreen();
         $this->filesystem = new Filesystem();
+
+        if ($pathBundlesConfig !== null) {
+            $this->pathBundlesConfig = $pathBundlesConfig;
+        }
 
         $this->environment = $environment;
         $this->debug = $debug;
