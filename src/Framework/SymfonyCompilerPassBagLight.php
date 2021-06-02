@@ -22,6 +22,12 @@ final class SymfonyCompilerPassBagLight extends AbstractSymfonyCompilerPassBag
      */
     protected $standartCompilerPasses = [
         [
+            'pass' => ControllerArgumentValueResolverPass::class,
+        ],
+        [
+            'pass' => RegisterControllerArgumentLocatorsPass::class,
+        ],
+        [
             'pass' => RoutingResolverPass::class,
         ],
         [
