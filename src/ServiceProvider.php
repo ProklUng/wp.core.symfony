@@ -728,6 +728,7 @@ class ServiceProvider
         try {
             $loader->load($_SERVER['DOCUMENT_ROOT'] . '/' . $fileName);
             $loader->load(__DIR__ . '/../config/base.yaml');
+
             return true;
         } catch (Exception $e) {
             $this->errorHandler->die('Сервис-контейнер: ' . $e->getMessage());
@@ -744,12 +745,20 @@ class ServiceProvider
      *
      * @return void
      * @throws Exception
+     * @throws RuntimeException Когда директория с конфигами не существует.
      *
      * @since 06.11.2020
      */
     private function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $confDir = $_SERVER['DOCUMENT_ROOT'] . $this->configDir;
+
+        if (!@file_exists($confDir)) {
+            throw new RuntimeException(
+                'Config directory ' . $confDir . ' not exist.'
+            );
+        }
+
         $container->setParameter('container.dumper.inline_class_loader', true);
 
         try {

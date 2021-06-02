@@ -53,3 +53,4 @@ services:
       - { name: 'post.type.registrator'}
 
   Prokl\ServiceProvider\Services\PostTypes\PostTypeRegistrator: '@custom.post.type.registrator'
+

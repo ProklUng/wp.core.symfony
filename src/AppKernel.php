@@ -81,10 +81,18 @@ class AppKernel extends Kernel
      * Регистрация бандлов.
      *
      * @return iterable|BundleInterface[]
+     *
+     * @since 02.06.2021 Если файл не существует - игнорим.
      */
     public function registerBundles(): iterable
     {
-        $contents = require $this->getProjectDir() . '/config/bundles.php';
+        $bundleConfigPath = $this->getProjectDir() . '/config/bundles.php';
+
+        if (!@file_exists($bundleConfigPath)) {
+            return [];
+        }
+
+        $contents = require $bundleConfigPath;
 
         foreach ($contents as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
@@ -123,8 +131,10 @@ class AppKernel extends Kernel
     {
         if (!array_key_exists($name, $this->bundles)) {
             $class = get_class($this);
-            $class = 'c' === $class[0] && 0 === strpos($class,
-                "class@anonymous\0") ? get_parent_class($class).'@anonymous' : $class;
+            $class = 'c' === $class[0] && 0 === strpos(
+                $class,
+                "class@anonymous\0"
+            ) ? get_parent_class($class).'@anonymous' : $class;
 
             throw new InvalidArgumentException(
                 sprintf(
@@ -143,14 +153,15 @@ class AppKernel extends Kernel
      * Директория кэша.
      *
      * @return string
-     * @throws RuntimeException
+     * @throws RuntimeException Когда не удалось создать директорию с кэшом.
      *
      * @since 13.12.2020 Доработка.
      */
     public function getCacheDir(): string
     {
         $cachePath = $this->getProjectDir() . $this->getRelativeCacheDir();
-        if (!file_exists($cachePath) && !mkdir($cachePath) && !is_dir($cachePath)) {
+
+        if (!file_exists($cachePath) && !mkdir($cachePath, 0777, true) && !is_dir($cachePath)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $cachePath));
         }
 
@@ -281,7 +292,6 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader) : void
     {
-
     }
 
     /**
