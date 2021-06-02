@@ -2,6 +2,7 @@
 
 namespace Prokl\ServiceProvider;
 
+use RuntimeException;
 use WP_Error;
 
 /**
@@ -38,6 +39,7 @@ class ShowErrorScreen
      * @param string $errorMessage Текст сообщения.
      *
      * @return boolean|null
+     * @throws RuntimeException Ошибки под PHPUnit.
      */
     public function die(string $errorMessage = '') : ?bool
     {
@@ -45,9 +47,7 @@ class ShowErrorScreen
 
         // Запущено из PHPUnit.
         if ($this->isPhpUnitRunning) {
-            echo $errorMessage; // Вывод в отладочных целях.
-
-            return false;
+            throw new RuntimeException($errorMessage);
         }
 
         $error = 500;
