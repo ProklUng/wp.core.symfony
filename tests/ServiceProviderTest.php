@@ -2,6 +2,7 @@
 
 namespace Prokl\ServiceProvider\Tests;
 
+use Exception;
 use Prokl\ServiceProvider\ServiceProvider;
 use Prokl\WordpressCi\Base\WordpressableTestCase;
 
@@ -14,14 +15,9 @@ use Prokl\WordpressCi\Base\WordpressableTestCase;
 class ServiceProviderTest extends WordpressableTestCase
 {
     /**
-     * @var
-     */
-    protected $obTestObject;
-
-    /**
      * @var ServiceProvider
      */
-    private $provider;
+    protected $obTestObject;
 
     /**
      * @inheritDoc
@@ -31,19 +27,73 @@ class ServiceProviderTest extends WordpressableTestCase
         parent::setUp();
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__;
-
-        $_ENV['APP_DEBUG'] = true;
-
-        $this->provider = new ServiceProvider(
-            '/Fixtures/config/test_container.yaml'
-        );
     }
 
     /**
      * @return void
+     * @throws Exception
      */
     public function testLoad() : void
     {
+        $_ENV['APP_DEBUG'] = true;
 
+        $this->obTestObject = new ServiceProvider(
+            '/Fixtures/config/test_container.yaml'
+        );
+
+        $container = $this->obTestObject->container();
+
+        $this->assertTrue($container->has('kernel'));
+        $this->assertTrue($container->has('test_service'));
+    }
+
+    /**
+     * Компилируется ли контейнер?
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testLoadProd() : void
+    {
+        $_ENV['APP_DEBUG'] = false;
+
+        $this->obTestObject = new ServiceProvider(
+            '/Fixtures/config/test_container.yaml',
+            'prod',
+            false
+        );
+
+        $container = $this->obTestObject->container();
+
+        $this->assertTrue($container->has('kernel'));
+        $this->assertTrue($container->has('test_service'));
+        $this->assertTrue(file_exists($_SERVER['DOCUMENT_ROOT'] . '/wp-content/cache/symfony-app/containers'));
+
+        $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/wp-content/cache/symfony-app');
+    }
+
+    /**
+     * Рекурсивно удалить папку со всем файлами и папками.
+     *
+     * @param string $dir Директория.
+     *
+     * @return void
+     */
+    private function rrmdir(string $dir) : void
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object !== "." && $object !== "..") {
+                    if (filetype($dir. '/' .$object) === "dir") {
+                        $this->rrmdir($dir . '/' . $object);
+                    } else {
+                        unlink($dir. '/' . $object);
+                    }
+                }
+            }
+            reset($objects);
+            rmdir($dir);
+        }
     }
 }

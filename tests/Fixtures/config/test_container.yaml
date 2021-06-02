@@ -1,3 +1,5 @@
+parameters:
+  compile.container: true
 services:
   # конфигурация по умолчанию в *этом* файле
   _defaults:
