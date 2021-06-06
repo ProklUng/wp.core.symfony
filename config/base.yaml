@@ -54,6 +54,9 @@ services:
 
   Prokl\ServiceProvider\Services\PostTypes\PostTypeRegistrator: '@custom.post.type.registrator'
 
+  #####################
+  # Argument resolvers
+  #####################
 
   controller_resolver:
     class: Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver
@@ -122,4 +125,12 @@ services:
 
   Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver: '@argument_resolver.variadic'
 
+  ########
+  # Utils
+  ########
 
+  # Экран смерти.
+  die_text:
+    class: Prokl\ServiceProvider\ShowErrorScreen
+
+  Prokl\ServiceProvider\ShowErrorScreen: '@die_text'
