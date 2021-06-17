@@ -2,6 +2,7 @@
 
 namespace Prokl\ServiceProvider;
 
+use Exception;
 use RuntimeException;
 use WP_Error;
 
@@ -75,5 +76,27 @@ class ShowErrorScreen
         echo ob_get_clean(); // Буфер захватывается в Local\Services\Buffering.
 
         die();
+    }
+
+    /**
+     * Обработчик wp_die для CLI режима.
+     *
+     * @param string | WP_Error $message The `wp_die()` message.
+     *
+     * @return void
+     *
+     * @throws Exception Exception containing the message.
+     */
+    public function wpDieCliHandler($message) : void
+    {
+        if (is_wp_error($message)) {
+            $message = $message->get_error_message();
+        }
+
+        if (!is_scalar($message)) {
+            $message = '0';
+        }
+
+        throw new Exception($message);
     }
 }

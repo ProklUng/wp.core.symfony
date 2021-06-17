@@ -6,6 +6,7 @@ use Exception;
 use Prokl\ServiceProvider\Bundles\BundlesLoader;
 use Prokl\ServiceProvider\Framework\SymfonyCompilerPassBag;
 use InvalidArgumentException;
+use Prokl\ServiceProvider\Utils\ContextDetector;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
@@ -194,6 +195,11 @@ class ServiceProvider
         $this->filename = $filename;
         $this->errorHandler = new ShowErrorScreen();
         $this->filesystem = new Filesystem();
+
+        // Изменить обработчик ошибок, если запускаемся в CLI.
+        if (ContextDetector::isCli()) {
+            add_filter('wp_die_handler', [$this->errorHandler, 'wpDieCliHandler']);
+        }
 
         if ($pathBundlesConfig !== null) {
             $this->pathBundlesConfig = $pathBundlesConfig;
