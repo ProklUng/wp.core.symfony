@@ -4,13 +4,13 @@ namespace Prokl\ServiceProvider;
 
 use Exception;
 use Prokl\ServiceProvider\Bundles\BundlesLoader;
+use Prokl\ServiceProvider\Framework\AutoconfigureConfig;
 use Prokl\ServiceProvider\Framework\SymfonyCompilerPassBag;
 use InvalidArgumentException;
 use Prokl\ServiceProvider\Utils\ContextDetector;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -32,15 +32,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
-use Symfony\Component\Validator\ConstraintValidatorInterface;
-use Symfony\Component\Validator\ObjectInitializerInterface;
 
 /**
  * Class ServiceProvider
@@ -73,6 +68,7 @@ use Symfony\Component\Validator\ObjectInitializerInterface;
  * @since 04.04.2021 Вынес стандартные compile pass Symfony в отдельный класс.
  * @since 14.04.2021 Метод boot бандлов вызывается теперь после компиляции контейнера.
  * @since 27.04.2021 Баг-фикс: при скомпилированном контейнере не запускался метод boot бандлов.
+ * @since 26.06.2021 Автоконфигурация тэгов вынесена в отдельный метод.
  *
  * @method static Container|null instance()
  * @method static mixed get()
@@ -378,6 +374,7 @@ class ServiceProvider
         }
 
         // Подключение скомпилированного контейнера.
+        /** @noinspection PhpIncludeInspection */
         require_once $compiledContainerFile;
 
         $classCompiledContainerName = '\\'.$classCompiledContainerName;
@@ -464,7 +461,7 @@ class ServiceProvider
      * Gets the container class.
      *
      * @return string The container class.
-     * @throws InvalidArgumentException If the generated classname is invalid
+     * @throws InvalidArgumentException If the generated classname is invalid.
      */
     private function getContainerClass() : string
     {
@@ -671,6 +668,7 @@ class ServiceProvider
             static::$containerBuilder->addCompilerPass($pass);
         }
 
+        $this->registerAutoconfig();
         $this->standartSymfonyPasses();
 
         // Локальные compile pass.
@@ -814,7 +812,7 @@ class ServiceProvider
     }
 
     /**
-     * Стандартные Symfony манипуляции над контейнером.
+     * Compiler passes.
      *
      * @return void
      *
@@ -824,21 +822,6 @@ class ServiceProvider
      */
     private function standartSymfonyPasses(): void
     {
-        /** @var array $autoConfigure Автоконфигурация тэгов. */
-        $autoConfigure = [
-            'controller.service_arguments' => AbstractController::class,
-            'controller.argument_value_resolver' => ArgumentValueResolverInterface::class,
-            'container.service_locator' => ServiceLocator::class,
-            'kernel.event_subscriber' => EventSubscriberInterface::class,
-            'validator.constraint_validator' => ConstraintValidatorInterface::class,
-            'validator.initializer' => ObjectInitializerInterface::class,
-        ];
-
-        foreach ($autoConfigure as $tag => $class) {
-            static::$containerBuilder->registerForAutoconfiguration($class)
-                                     ->addTag($tag);
-        }
-
         // Применяем compiler passes.
         foreach ($this->standartCompilerPasses as $pass) {
             if (!array_key_exists('pass', $pass) || !class_exists($pass['pass'])) {
@@ -848,6 +831,22 @@ class ServiceProvider
                 new $pass['pass'],
                 $pass['phase'] ?? PassConfig::TYPE_BEFORE_OPTIMIZATION
             );
+        }
+    }
+
+    /**
+     * Регистрация автоконфигурируемых тэгов.
+     *
+     * @return void
+     * @throws RuntimeException Когда необходимая зависимость не существует.
+     */
+    private function registerAutoconfig() : void
+    {
+        $autoConfigure = new AutoconfigureConfig();
+
+        foreach ($autoConfigure->getAutoConfigure() as $tag => $class) {
+            static::$containerBuilder->registerForAutoconfiguration($class)
+                ->addTag($tag);
         }
     }
 
