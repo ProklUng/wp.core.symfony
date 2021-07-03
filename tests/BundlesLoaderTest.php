@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Prokl\ServiceProvider\Bundles\BundlesLoader;
 use Prokl\ServiceProvider\Tests\Fixtures\DummyService;
 use Prokl\ServiceProvider\Tests\Fixtures\TestingBundle;
+use Prokl\ServiceProvider\Tests\Fixtures\TestingBundleDev;
 use Prokl\TestingTools\Base\BaseTestCase;
 use Prokl\TestingTools\Tools\PHPUnitUtils;
 use ReflectionException;
@@ -41,6 +42,7 @@ class BundlesLoaderTest extends BaseTestCase
         $this->dummyContainer = new ContainerBuilder();
         $this->obTestObject = new BundlesLoader(
             $this->dummyContainer,
+            'dev',
             '/Fixtures/bundles.php'
         );
     }
@@ -59,6 +61,8 @@ class BundlesLoaderTest extends BaseTestCase
         $this->assertCount(1, $result);
         $this->assertSame('TestingBundle', array_key_first($result));
         $this->assertInstanceOf(TestingBundle::class, $result['TestingBundle']);
+        // Не загрузился ли бандл для другого окружения.
+        $this->assertArrayNotHasKey(TestingBundleDev::class, $result);
     }
 
     /**
@@ -81,6 +85,28 @@ class BundlesLoaderTest extends BaseTestCase
     }
 
     /**
+     * load(). Другое окружение.
+     *
+     * @return void
+     */
+    public function testLoadAnotherEnv() : void
+    {
+        $this->obTestObject = new BundlesLoader(
+            $this->dummyContainer,
+            'test',
+            '/Fixtures/bundles.php'
+        );
+
+        $this->obTestObject->load();
+
+        $result = $this->obTestObject->bundles();
+
+        $this->assertArrayHasKey('TestingBundle', $result);
+        $this->assertArrayHasKey('TestingBundleDev', $result);
+        $this->assertInstanceOf(TestingBundleDev::class, $result['TestingBundleDev']);
+    }
+
+    /**
      * load(). Бандл без метода RegisterExtension.
      *
      * @return void
@@ -89,11 +115,14 @@ class BundlesLoaderTest extends BaseTestCase
     {
         $this->obTestObject = new BundlesLoader(
             $this->dummyContainer,
+            'dev',
             '/Fixtures/invalid_bundles.php'
         );
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Bundle TestingInvalidBundle dont have implemented getContainerExtension method.');
+        $this->expectExceptionMessage(
+            'Bundle Prokl\ServiceProvider\Tests\Fixtures\TestingInvalidBundle dont have implemented getContainerExtension method.'
+        );
 
         $this->obTestObject->load();
     }
@@ -107,6 +136,7 @@ class BundlesLoaderTest extends BaseTestCase
     {
         $this->obTestObject = new BundlesLoader(
             $this->dummyContainer,
+            'dev',
             '/Fixtures/fake_bundles.php'
         );
 

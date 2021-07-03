@@ -863,6 +863,7 @@ class ServiceProvider
     {
         $this->bundlesLoader = new BundlesLoader(
             static::$containerBuilder,
+            $this->environment,
             $this->pathBundlesConfig
         );
 

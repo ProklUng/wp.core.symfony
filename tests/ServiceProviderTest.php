@@ -28,6 +28,8 @@ class ServiceProviderTest extends WordpressableTestCase
         parent::setUp();
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+        $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/wp-content/cache/symfony-app');
+        $_ENV['APP_DEBUG'] = true;
     }
 
     /**
@@ -53,6 +55,9 @@ class ServiceProviderTest extends WordpressableTestCase
      *
      * @return void
      * @throws Exception
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLoadProd() : void
     {
@@ -68,6 +73,7 @@ class ServiceProviderTest extends WordpressableTestCase
 
         $this->assertTrue($container->has('kernel'));
         $this->assertTrue($container->has('test_service'));
+
         $this->assertTrue(file_exists($_SERVER['DOCUMENT_ROOT'] . '/wp-content/cache/symfony-app/containers'));
 
         $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/wp-content/cache/symfony-app');
@@ -78,10 +84,13 @@ class ServiceProviderTest extends WordpressableTestCase
      *
      * @return void
      * @throws Exception
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLoadBundles() : void
     {
-        $_ENV['APP_DEBUG'] = false;
+        $_ENV['APP_DEBUG'] = true;
 
         $this->obTestObject = new ServiceProvider(
             '/Fixtures/config/test_container.yaml',
@@ -110,6 +119,9 @@ class ServiceProviderTest extends WordpressableTestCase
     /**
      * @return void
      * @throws Exception
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLoadInvalidConfigFile() : void
     {

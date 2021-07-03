@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfiguration
  * @since 20.12.2020 Сделать все приватные консольные команды публичными.
  * @since 04.03.2021 Возможность загрузки бандлов несколькими провайдерами.
  * @since 27.04.2021 Баг-фикс: при скомпилированном контейнере не запускался метод boot бандлов.
+ * @since 03.07.2021 Поддержка ключей окружения при загрузке бандлов.
  */
 class BundlesLoader
 {
@@ -47,13 +48,20 @@ class BundlesLoader
     private static $bundlesMap = [];
 
     /**
+     * @var string $environment Окружение.
+     */
+    private $environment;
+
+    /**
      * BundlesLoader constructor.
      *
-     * @param ContainerBuilder $container  Контейнер в стадии формирования.
-     * @param string           $configPath Путь к bundles.php (конфигурация бандлов).
+     * @param ContainerBuilder $container   Контейнер в стадии формирования.
+     * @param string           $environment Окружение.
+     * @param string           $configPath  Путь к bundles.php (конфигурация бандлов).
      */
     public function __construct(
         ContainerBuilder $container,
+        string $environment,
         string $configPath = ''
     ) {
         $configPath = $configPath ?: self::PATH_BUNDLES_CONFIG;
@@ -63,6 +71,8 @@ class BundlesLoader
         }
 
         $this->container = $container;
+        $this->environment = $environment;
+
         static::$bundlesMap[static::class] = [];
     }
 
@@ -78,10 +88,20 @@ class BundlesLoader
         foreach ($this->bundles as $bundleClass => $envs) {
             if (!class_exists($bundleClass)) {
                 throw new InvalidArgumentException(
-                    sprintf(
-                        'Bundle class %s not exist.',
-                        $bundleClass
-                    )
+                    sprintf('Bundle class %s not exist.', $bundleClass)
+                );
+            }
+
+            if (!array_key_exists($this->environment, (array)$envs)
+                &&
+                !array_key_exists('all', (array)$envs)
+            ) {
+                continue;
+            }
+
+            if (!method_exists($bundleClass, 'getContainerExtension')) {
+                throw new InvalidArgumentException(
+                    sprintf('Bundle %s dont have implemented getContainerExtension method.', $bundleClass)
                 );
             }
 
@@ -96,32 +116,22 @@ class BundlesLoader
 
             $extension = $bundle->getContainerExtension();
             if ($extension !== null) {
-                // @since 11.11.2020 - регистрация extensions перед build.
                 $this->container->registerExtension($extension);
                 $bundle->build($this->container);
 
                 // Сделать все приватные подписчики событий публичными.
                 // Без этого они почему-то не подхватываются при загрузке бандлов.
-                $this->container->addCompilerPass(
-                    new MakePrivateEventsPublic()
-                );
+                $this->container->addCompilerPass(new MakePrivateEventsPublic());
 
                 // Сделать все приватные команды публичными.
                 // Без этого они почему-то не подхватываются при загрузке бандлов.
                 $this->container->addCompilerPass(
                     new MakePrivateCommandsPublic()
                 );
-
-                // Сохраняю инстанцированный бандл в статику.
-                static::$bundlesMap[static::class][$bundle->getName()] = $bundle;
-            } else {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Bundle %s dont have implemented getContainerExtension method.',
-                        $bundle->getName()
-                    )
-                );
             }
+
+            // Сохраняю инстанцированный бандл в статику.
+            static::$bundlesMap[static::class][$bundle->getName()] = $bundle;
         }
     }
 
