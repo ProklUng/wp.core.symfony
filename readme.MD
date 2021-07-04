@@ -24,15 +24,11 @@ composer require proklung/wp.core.symfony
 ```php
 use Prokl\ServiceProvider\LoadEnvironment;
 
-/** Загрузить окружение. */
-$environment = new LoadEnvironment();
+/** Загрузить окружение. Параметр конструктора - путь к .env файлам */
+$environment = new LoadEnvironment($_SERVER['DOCUMENT_ROOT']);
 $environment->load();
 
-$_SERVER = array_merge($_SERVER, $_ENV);
-$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: 'dev';
-$_SERVER['APP_DEBUG'] = $_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? 'prod' !== $_SERVER['APP_ENV'];
-$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = (int)$_SERVER['APP_DEBUG']
-|| filter_var($_SERVER['APP_DEBUG'], FILTER_VALIDATE_BOOLEAN) ? '1' : '0';
+$environment->process();
 ```
 
 В `functions.php` темы:
@@ -50,6 +46,11 @@ $serviceProvider = new ServiceProvider(
 
 Для обеспечения "преемственности" (похожести) с оригиналом можно задать путь к файлу конфигурации
  (скажем, `bundles.php`) бандлов четвертым (необязательным) параметром конструктора.
+
+#### Значимые переменные окружения
+
+- `APP_ENV` - код окружения (dev, prod, test и т.д.)
+- `APP_DEBUG` - режим отладки
 
 ## Конфигурирование
 

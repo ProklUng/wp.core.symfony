@@ -30,7 +30,32 @@ class LoadEnvironmentTest extends BaseTestCase
         parent::setUp();
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/Fixtures/env';
-        $this->obTestObject = new LoadEnvironment();
+        $this->obTestObject = new LoadEnvironment($_SERVER['DOCUMENT_ROOT']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($_ENV);
+        unset($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testProcess() : void
+    {
+        $_ENV['APP_DEBUG'] = true;
+        $_ENV['APP_ENV'] = 'test';
+
+        $this->obTestObject->process();
+
+        $this->assertTrue((bool)$_SERVER['APP_DEBUG']);
+        $this->assertSame('test', $_SERVER['APP_ENV']);
     }
 
     /**
