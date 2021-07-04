@@ -2,6 +2,7 @@
 
 namespace Prokl\ServiceProvider\Tests\PostLoadingPasses;
 
+use Exception;
 use Prokl\ServiceProvider\PostLoadingPass\BootstrapServices;
 use Prokl\TestingTools\Base\BaseTestCase;
 use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
@@ -13,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @coversDefaultClass BootstrapServices
  *
  * @since 28.09.2020
+ * @since 04.07.2021 Актуализация.
  */
 class BootstrapServicesTest extends BaseTestCase
 {
@@ -21,44 +23,54 @@ class BootstrapServicesTest extends BaseTestCase
      */
     protected $obTestObject;
 
+    /**
+     * @var object $stubService Сервис.
+     */
+    private $stubService;
+
+
+    /**
+     * @inheritDoc
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->obTestObject = new BootstrapServices();
+        $this->stubService = $this->getStubService();
     }
 
     /**
      * action(). Нормальный ход событий.
      *
      * @return void
+     * @throws Exception
      */
     public function testAction(): void
     {
         $testContainerBuilder = $this->getTestContainer('service.bootstrap');
 
-        $result = $this->obTestObject->action(
-            $testContainerBuilder
-        );
+        $result = $this->obTestObject->action($testContainerBuilder);
 
         $this->assertTrue(
             $result,
             'Что-то пошло не так.'
         );
+
+        $this->assertTrue($this->stubService->running, 'Сервис не запустился автоматом.');
     }
 
     /**
      * action(). Нет обработчиков. Пустой parameterBag.
      *
      * @return void
+     * @throws Exception
      */
     public function testActionNoListener(): void
     {
         $container = $this->getEmptyContainer();
 
-        $result = $this->obTestObject->action(
-            $container
-        );
+        $result = $this->obTestObject->action($container);
 
         $this->assertFalse(
             $result,
@@ -74,9 +86,18 @@ class BootstrapServicesTest extends BaseTestCase
     private function getStubService()
     {
         return new class {
+            /**
+             * @var boolean $running Признак - запускался ли сервис.
+             */
+            public $running = false;
+
+            public function __construct()
+            {
+                $this->running = true;
+            }
+
             public function addEvent(): void
             {
-
             }
         };
     }
@@ -97,7 +118,7 @@ class BootstrapServicesTest extends BaseTestCase
     ): ContainerBuilder {
         $container = new ContainerBuilder();
         $container
-            ->register($serviceId, get_class($this->getStubService()))
+            ->register($serviceId, get_class($this->stubService))
             ->setPublic(true);
 
         $container->setParameter('_bootstrap', [

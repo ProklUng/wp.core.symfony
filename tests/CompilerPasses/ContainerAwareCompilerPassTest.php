@@ -24,6 +24,9 @@ class ContainerAwareCompilerPassTest extends BaseTestCase
      */
     protected $obTestObject;
 
+    /**
+     * @inheritDoc
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -106,14 +109,14 @@ class ContainerAwareCompilerPassTest extends BaseTestCase
     /**
      * Тестовый контейнер.
      *
-     * @param string $serviceId ID сервиса.
-     * @param null $object
+     * @param string      $serviceId ID сервиса.
+     * @param object|null $object    Сервис.
      *
      * @return ContainerBuilder
      */
     private function getTestContainer(
         string $serviceId,
-        $object = null
+        ?object $object = null
     ): ContainerBuilder {
 
         if ($object === null) {

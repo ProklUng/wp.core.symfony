@@ -22,6 +22,9 @@ class TwigExtensionTaggedServicesPassTest extends BaseTestCase
      */
     protected $obTestObject;
 
+    /**
+     * @inheritDoc
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -86,15 +89,15 @@ class TwigExtensionTaggedServicesPassTest extends BaseTestCase
     /**
      * Тестовый контейнер.
      *
-     * @param string  $serviceId ID сервиса.
-     * @param null    $object
-     * @param boolean $tagged
+     * @param string      $serviceId ID сервиса.
+     * @param object|null $object
+     * @param boolean     $tagged
      *
      * @return ContainerBuilder
      */
     private function getTestContainer(
         string $serviceId,
-        $object = null,
+        ?object $object = null,
         bool $tagged = true
     ): ContainerBuilder {
 
