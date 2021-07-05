@@ -3,8 +3,11 @@
 namespace Prokl\ServiceProvider\Tests;
 
 use Exception;
+use LogicException;
+use Prokl\ServiceProvider\AppKernel;
 use Prokl\ServiceProvider\ServiceProvider;
 use Prokl\WordpressCi\Base\WordpressableTestCase;
+use ReflectionProperty;
 use RuntimeException;
 
 /**
@@ -40,9 +43,7 @@ class ServiceProviderTest extends WordpressableTestCase
     {
         $_ENV['APP_DEBUG'] = true;
 
-        $this->obTestObject = new ServiceProvider(
-            '/Fixtures/config/test_container.yaml'
-        );
+        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
 
         $container = $this->obTestObject->container();
 
@@ -117,6 +118,64 @@ class ServiceProviderTest extends WordpressableTestCase
     }
 
     /**
+     *
+     * shutdown().
+     *
+     * @return void
+     * @throws Exception
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testShutdown(): void
+    {
+        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+        $container = $this->obTestObject->container();
+
+        /** @var AppKernel $kernel */
+        $kernel = $container->get('kernel');
+
+        $this->obTestObject->shutdown();
+
+        $reflection = new ReflectionProperty(ServiceProvider::class, 'containerBuilder');
+        $reflection->setAccessible(true);
+        $value = $reflection->getValue(null);
+
+        $this->assertNull($value, 'Контейнер не обнулился');
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot retrieve the container from a non-booted kernel.');
+        $kernel->getContainer();
+    }
+
+    /**
+     *
+     * reboot().
+     *
+     * @return void
+     * @throws Exception
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testReboot(): void
+    {
+        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+
+        $this->obTestObject->reboot();
+
+        $reflection = new ReflectionProperty(ServiceProvider::class, 'containerBuilder');
+        $reflection->setAccessible(true);
+        $container = $reflection->getValue(null);
+
+        /** @var AppKernel $kernel */
+        $kernel = $container->get('kernel');
+
+        $this->assertNotNull($container, 'Контейнер обнулился');
+        $this->assertNotNull($kernel->getContainer(), 'Контейнер в kernel обнулился');
+    }
+
+    /**
      * @return void
      * @throws Exception
      *
@@ -126,9 +185,7 @@ class ServiceProviderTest extends WordpressableTestCase
     public function testLoadInvalidConfigFile() : void
     {
         $this->expectException(RuntimeException::class);
-        $this->obTestObject = new ServiceProvider(
-            '/fake.yaml'
-        );
+        $this->obTestObject = new ServiceProvider('/fake.yaml');
     }
 
     /**

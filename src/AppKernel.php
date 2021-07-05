@@ -311,11 +311,11 @@ class AppKernel extends Kernel
     /**
      * Задать контейнер.
      *
-     * @param ContainerInterface $container Контейнер.
+     * @param ContainerInterface|null $container Контейнер.
      *
      * @since 18.11.2020
      */
-    public function setContainer(ContainerInterface $container) : void
+    public function setContainer(?ContainerInterface $container = null) : void
     {
         $this->container = $container;
     }
@@ -323,7 +323,7 @@ class AppKernel extends Kernel
     /**
      * Initializes bundles.
      *
-     * @throws LogicException if two bundles share a common name
+     * @throws LogicException if two bundles share a common name.
      */
     protected function initializeBundles(): void
     {

@@ -218,13 +218,7 @@ class ServiceProvider
         $this->compilerPassesBag = $customCompilePassesBag->getCompilerPassesBag();
         $this->postLoadingPassesBag = $customCompilePassesBag->getPostLoadingPassesBag();
 
-        try {
-            $this->initContainer($filename);
-        } catch (Exception $e) {
-            $this->errorHandler->die('Ошибка сервис-контейнера: '.$e->getMessage());
-
-            return;
-        }
+        $this->boot();
     }
 
     /**
@@ -289,6 +283,60 @@ class ServiceProvider
     {
         // @phpstan-ignore-next-line
         static::$containerBuilder = null;
+    }
+
+    /**
+     * Reboot.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function reboot() : void
+    {
+        $this->shutdown();
+        $this->boot();
+    }
+
+    /**
+     * Shutdown.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function shutdown() : void
+    {
+        if (static::$containerBuilder === null) {
+            return;
+        }
+
+        if (static::$containerBuilder->has('kernel')) {
+            /** @var AppKernel $kernel */
+            $kernel = static::$containerBuilder->get('kernel');
+            $kernel->setContainer(null);
+        }
+
+        foreach (BundlesLoader::getBundlesMap() as $bundle) {
+            $bundle->shutdown();
+            $bundle->setContainer(null);
+        }
+
+        static::$containerBuilder = null;
+    }
+
+    /**
+     * Boot.
+     *
+     * @throws Exception
+     */
+    private function boot() : void
+    {
+        try {
+            $this->initContainer($this->filename);
+        } catch (Exception $e) {
+            $this->errorHandler->die('Ошибка сервис-контейнера: '.$e->getMessage());
+
+            return;
+        }
     }
 
     /**
@@ -846,7 +894,7 @@ class ServiceProvider
 
         foreach ($autoConfigure->getAutoConfigure() as $tag => $class) {
             static::$containerBuilder->registerForAutoconfiguration($class)
-                ->addTag($tag);
+                                     ->addTag($tag);
         }
     }
 
@@ -922,7 +970,7 @@ class ServiceProvider
                 return static::$containerBuilder;
             }
 
-            $self = new self(...$args);
+            $self = new static(...$args);
 
             try {
                 return $self->container();
