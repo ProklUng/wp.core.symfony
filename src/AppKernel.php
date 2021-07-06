@@ -60,6 +60,11 @@ class AppKernel extends Kernel
     private $projectDir = '';
 
     /**
+     * @var string $bundlesConfigFile Файл с конфигурацией бандлов.
+     */
+    private $bundlesConfigFile = '/config/bundles.php';
+
+    /**
      * AppKernel constructor.
      *
      * @param string  $environment Окружение.
@@ -86,12 +91,13 @@ class AppKernel extends Kernel
      */
     public function registerBundles(): iterable
     {
-        $bundleConfigPath = $this->getProjectDir() . '/config/bundles.php';
+        $bundleConfigPath = $this->getProjectDir() . $this->bundlesConfigFile;
 
         if (!@file_exists($bundleConfigPath)) {
             return [];
         }
 
+        /* @noinspection PhpIncludeInspection */
         $contents = require $bundleConfigPath;
 
         foreach ($contents as $class => $envs) {
@@ -121,7 +127,7 @@ class AppKernel extends Kernel
     /**
      * Returns a bundle.
      *
-     * @param string $name Bundle name
+     * @param string $name Bundle name.
      *
      * @return BundleInterface A BundleInterface instance
      *

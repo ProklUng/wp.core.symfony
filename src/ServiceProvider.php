@@ -813,10 +813,7 @@ class ServiceProvider
 
         $container->setParameter('container.dumper.inline_class_loader', true);
 
-        try {
-            $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
-        } catch (Exception $e) {
-        }
+        $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
 
         if (is_dir($confDir . '/packages/' . $this->environment)) {
             $loader->load($confDir . '/packages/' . $this->environment . '/**/*' .self::CONFIG_EXTS, 'glob');
