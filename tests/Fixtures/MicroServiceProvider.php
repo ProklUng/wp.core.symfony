@@ -1,18 +1,20 @@
 <?php
 
-namespace Prokl\ServiceProvider\Micro;
+namespace Prokl\ServiceProvider\Tests\Fixtures;
 
+use Prokl\ServiceProvider\Micro\AbstractStandaloneServiceProvider;
+use Prokl\ServiceProvider\Micro\ExampleAppKernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Class ExampleMicroServiceProvider
- * @package Prokl\ServiceProvider\Micro
+ * Class MicroServiceProvider
+ * @package Prokl\ServiceProvider\Tests\Fixtures
  *
  * Пример микро-сервиспровайдера (для модулей и т.п.)
  *
- * @since 04.03.2021
+ * @since 11.07.2021
  */
-class ExampleMicroServiceProvider extends AbstractStandaloneServiceProvider
+class MicroServiceProvider extends AbstractStandaloneServiceProvider
 {
     /**
      * @var ContainerBuilder $containerBuilder Контейнер.
@@ -22,12 +24,12 @@ class ExampleMicroServiceProvider extends AbstractStandaloneServiceProvider
     /**
      * @var string $pathBundlesConfig Путь к конфигурации бандлов.
      */
-    protected $pathBundlesConfig = '/src/Micro/example.config/standalone_bundles.php';
+    protected $pathBundlesConfig = '/../src/Micro/example.config/standalone_bundles.php';
 
     /**
      * @var string $configDir Папка, где лежат конфиги.
      */
-    protected $configDir = '/src/Micro/example.config/example.yaml';
+    protected $configDir = '/../src/Micro/example.config';
 
     /**
      * @var string $kernelServiceClass Класс, реализующий сервис kernel.

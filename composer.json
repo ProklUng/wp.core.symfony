@@ -52,6 +52,7 @@
     "timber/timber": "^1.9"
   },
   "require-dev": {
-    "proklung/wordpress-test-build": "^1.1"
+    "proklung/wordpress-test-build": "^1.1",
+    "icanhazstring/composer-unused": "^0.7.5"
   }
 }

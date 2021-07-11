@@ -162,6 +162,11 @@ class ServiceProvider
     private $debug;
 
     /**
+     * @var string $projectRoot DOCUMENT_ROOT.
+     */
+    private $projectRoot = '';
+
+    /**
      * @var array $standartCompilerPasses Пассы Symfony.
      */
     protected $standartCompilerPasses = [];
@@ -172,6 +177,11 @@ class ServiceProvider
     protected $symfonyCompilerClass = SymfonyCompilerPassBag::class;
 
     /**
+     * @var string $kernelServiceClass Класс, реализующий сервис kernel.
+     */
+    protected $kernelServiceClass = AppKernel::class;
+
+    /**
      * ServiceProvider constructor.
      *
      * @param string      $filename          Конфигурационный Yaml файл.
@@ -179,8 +189,10 @@ class ServiceProvider
      * @param boolean     $debug             Режим отладки.
      * @param string|null $pathBundlesConfig Путь к конфигурации бандлов.
      *
-     * @since 12.11.2020 Окружение и debug передаются снаружи.
+     * @throws Exception
+     *
      * @since 01.06.2021 Путь к конфигурации бандлов можно задать снаружи.
+     * @since 12.11.2020 Окружение и debug передаются снаружи.
      */
     public function __construct(
         string $filename = self::SERVICE_CONFIG_FILE,
@@ -203,6 +215,7 @@ class ServiceProvider
 
         $this->environment = $environment;
         $this->debug = $debug;
+        $this->projectRoot = $_SERVER['DOCUMENT_ROOT'];
 
         /** @psalm-suppress RedundantConditionGivenDocblockType */
         if (static::$containerBuilder !== null) {
@@ -559,9 +572,7 @@ class ServiceProvider
              * Это исключение никогда не будет выброшено. Экран смерти выше его перебьет.
              * Нужно, чтобы не возвращать null или что-то подобное.
              */
-            throw new RuntimeException(
-                'Error initialize container.'
-            );
+            throw new RuntimeException('Error initialize container.');
         }
 
         // Контейнер в AppKernel, чтобы соответствовать Symfony.
@@ -625,12 +636,7 @@ class ServiceProvider
     private function setDefaultParamsContainer(): void
     {
         if (!static::$containerBuilder->hasDefinition('kernel')) {
-            static::$containerBuilder->register('kernel', AppKernel::class)
-                ->addTag('service.bootstrap')
-                ->setAutoconfigured(true)
-                ->setPublic(true)
-                ->setArguments([$this->environment, $this->debug])
-            ;
+            $this->registerKernel($this->kernelServiceClass);
         }
 
         /** @var AppKernel $kernelService */
@@ -645,6 +651,24 @@ class ServiceProvider
     }
 
     /**
+     * Регистрация kernel сервиса.
+     *
+     * @param string $kernelClass Класс Kernel.
+     *
+     * @return void
+     *
+     * @since 11.07.2021
+     */
+    private function registerKernel(string $kernelClass) : void
+    {
+        static::$containerBuilder->register('kernel', $kernelClass)
+            ->addTag('service.bootstrap')
+            ->setAutoconfigured(true)
+            ->setPublic(true)
+            ->setArguments([$this->environment, $this->debug]);
+    }
+
+    /**
      * Путь к директории с компилированным контейнером.
      *
      * @param string $filename Конфигурация.
@@ -655,7 +679,7 @@ class ServiceProvider
      */
     private function getPathCacheDirectory(string $filename) : string
     {
-        return $_SERVER['DOCUMENT_ROOT'] . self::COMPILED_CONTAINER_DIR .'/containers/'. md5($filename);
+        return $this->projectRoot . self::COMPILED_CONTAINER_DIR .'/containers/'. md5($filename);
     }
 
     /**
@@ -778,7 +802,7 @@ class ServiceProvider
         $loader = $this->getContainerLoader($containerBuilder);
 
         try {
-            $loader->load($_SERVER['DOCUMENT_ROOT'] . '/' . $fileName);
+            $loader->load($this->projectRoot . '/' . $fileName);
             $loader->load(__DIR__ . '/../config/base.yaml');
 
             return true;
@@ -803,7 +827,7 @@ class ServiceProvider
      */
     private function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $confDir = $_SERVER['DOCUMENT_ROOT'] . $this->configDir;
+        $confDir = $this->projectRoot . $this->configDir;
 
         if (!@file_exists($confDir)) {
             throw new RuntimeException(
@@ -813,7 +837,9 @@ class ServiceProvider
 
         $container->setParameter('container.dumper.inline_class_loader', true);
 
-        $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
+        if (is_dir($confDir.'/packages')) {
+            $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
+        }
 
         if (is_dir($confDir . '/packages/' . $this->environment)) {
             $loader->load($confDir . '/packages/' . $this->environment . '/**/*' .self::CONFIG_EXTS, 'glob');

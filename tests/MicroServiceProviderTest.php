@@ -4,24 +4,27 @@ namespace Prokl\ServiceProvider\Tests;
 
 use Exception;
 use LogicException;
-use Prokl\ServiceProvider\AppKernel;
-use Prokl\ServiceProvider\ServiceProvider;
+use Prokl\ServiceProvider\Micro\ExampleAppKernel;
+use Prokl\ServiceProvider\Tests\Fixtures\MicroServiceProvider;
 use Prokl\WordpressCi\Base\WordpressableTestCase;
 use ReflectionProperty;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ServiceProviderTest
+ * Class MicroServiceProviderTest
  * @package Prokl\ServiceProvider\Tests
  *
- * @since 02.06.2021
+ * @since 11.07.2021
  */
-class ServiceProviderTest extends WordpressableTestCase
+class MicroServiceProviderTest extends WordpressableTestCase
 {
     /**
-     * @var ServiceProvider
+     * @var MicroServiceProvider
      */
     protected $obTestObject;
+
+    private $config = '/Fixtures/config/test_micro_container.yaml';
 
     /**
      * @inheritDoc
@@ -43,7 +46,7 @@ class ServiceProviderTest extends WordpressableTestCase
     {
         $_ENV['APP_DEBUG'] = true;
 
-        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+        $this->obTestObject = new MicroServiceProvider($this->config);
 
         $container = $this->obTestObject->container();
 
@@ -64,8 +67,8 @@ class ServiceProviderTest extends WordpressableTestCase
     {
         $_ENV['APP_DEBUG'] = false;
 
-        $this->obTestObject = new ServiceProvider(
-            '/Fixtures/config/test_container.yaml',
+        $this->obTestObject = new MicroServiceProvider(
+            $this->config,
             'prod',
             false
         );
@@ -93,8 +96,8 @@ class ServiceProviderTest extends WordpressableTestCase
     {
         $_ENV['APP_DEBUG'] = true;
 
-        $this->obTestObject = new ServiceProvider(
-            '/Fixtures/config/test_container.yaml',
+        $this->obTestObject = new MicroServiceProvider(
+            $this->config,
             'dev',
             true,
             '/Fixtures/bundles.php'
@@ -129,15 +132,15 @@ class ServiceProviderTest extends WordpressableTestCase
      */
     public function testShutdown(): void
     {
-        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+        $this->obTestObject = new MicroServiceProvider($this->config);
         $container = $this->obTestObject->container();
 
-        /** @var AppKernel $kernel */
+        /** @var ExampleAppKernel $kernel */
         $kernel = $container->get('kernel');
 
         $this->obTestObject->shutdown();
 
-        $reflection = new ReflectionProperty(ServiceProvider::class, 'containerBuilder');
+        $reflection = new ReflectionProperty(MicroServiceProvider::class, 'containerBuilder');
         $reflection->setAccessible(true);
         $value = $reflection->getValue(null);
 
@@ -161,15 +164,15 @@ class ServiceProviderTest extends WordpressableTestCase
      */
     public function testReboot(): void
     {
-        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+        $this->obTestObject = new MicroServiceProvider($this->config);
 
         $this->obTestObject->reboot();
 
-        $reflection = new ReflectionProperty(ServiceProvider::class, 'containerBuilder');
+        $reflection = new ReflectionProperty(MicroServiceProvider::class, 'containerBuilder');
         $reflection->setAccessible(true);
         $container = $reflection->getValue(null);
 
-        /** @var AppKernel $kernel */
+        /** @var ExampleAppKernel $kernel */
         $kernel = $container->get('kernel');
 
         $this->assertNotNull($container, 'Контейнер обнулился');
@@ -186,7 +189,49 @@ class ServiceProviderTest extends WordpressableTestCase
     public function testLoadInvalidConfigFile() : void
     {
         $this->expectException(RuntimeException::class);
-        $this->obTestObject = new ServiceProvider('/fake.yaml');
+        $this->obTestObject = new MicroServiceProvider('/fake.yaml');
+    }
+
+
+    /**
+     * Правильный ли класс установился в качестве сервиса kernel.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testSetAppKernelProperly() : void
+    {
+        $_ENV['APP_DEBUG'] = true;
+
+        $this->obTestObject = new MicroServiceProvider($this->config);
+
+        $container = $this->obTestObject->container();
+        $kernel = $container->get('kernel');
+
+        $this->assertInstanceOf(ExampleAppKernel::class, $kernel);
+    }
+
+    /**
+     * Правильный ли контейнер в сервисе kernel.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testSetAppKernelContainerProperly() : void
+    {
+        $_ENV['APP_DEBUG'] = true;
+
+        $this->obTestObject = new MicroServiceProvider($this->config);
+
+        $container = $this->obTestObject->container();
+
+        /** @var ContainerInterface $containerKernel */
+        $containerKernel = $container->get('kernel')->getContainer();
+
+        $this->assertSame(
+            $containerKernel->getParameter('dummy'),
+            'OK'
+        );
     }
 
     /**

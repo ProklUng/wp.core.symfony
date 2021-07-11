@@ -65,10 +65,15 @@ class AppKernel extends Kernel
     private $bundlesConfigFile = '/config/bundles.php';
 
     /**
+     * @var ContainerInterface|null $kernelContainer Копия контейнера.
+     */
+    protected static $kernelContainer;
+
+    /**
      * AppKernel constructor.
      *
      * @param string  $environment Окружение.
-     * @param boolean $debug       Отладка?
+     * @param boolean $debug       Признак режима отладки.
      */
     public function __construct(string $environment, bool $debug)
     {
@@ -323,7 +328,19 @@ class AppKernel extends Kernel
      */
     public function setContainer(?ContainerInterface $container = null) : void
     {
-        $this->container = $container;
+        $this->container = static::$kernelContainer = $container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContainer()
+    {
+        if (static::$kernelContainer === null) {
+            throw new LogicException('Cannot retrieve the container from a non-booted kernel.');
+        }
+
+        return static::$kernelContainer;
     }
 
     /**
