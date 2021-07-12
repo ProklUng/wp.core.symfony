@@ -6,7 +6,9 @@ use Exception;
 use LogicException;
 use Prokl\ServiceProvider\AppKernel;
 use Prokl\ServiceProvider\ServiceProvider;
+use Prokl\TestingTools\Tools\PHPUnitUtils;
 use Prokl\WordpressCi\Base\WordpressableTestCase;
+use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 
@@ -187,6 +189,30 @@ class ServiceProviderTest extends WordpressableTestCase
     {
         $this->expectException(RuntimeException::class);
         $this->obTestObject = new ServiceProvider('/fake.yaml');
+    }
+
+    /**
+     * getPathCacheDirectory().
+     *
+     * @return void
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    public function testGetPathCacheDirectory() : void
+    {
+        $this->obTestObject = new ServiceProvider('/Fixtures/config/test_container.yaml');
+
+        $filename = 'test';
+        $result = PHPUnitUtils::callMethod(
+            $this->obTestObject,
+            'getPathCacheDirectory',
+            [$filename]
+        );
+
+        $this->assertStringContainsString(
+            'wp-content/cache/symfony-app/containers/',
+            $result
+        );
     }
 
     /**

@@ -89,7 +89,7 @@ class ServiceProvider
     /**
      * @const string COMPILED_CONTAINER_DIR Путь к скомпилированному контейнеру.
      */
-    private const COMPILED_CONTAINER_DIR = '/wp-content/cache/symfony-app';
+    private const COMPILED_CONTAINER_DIR = '/wp-content/cache';
 
     /**
      * @const string CONFIG_EXTS Расширения конфигурационных файлов.
@@ -180,6 +180,11 @@ class ServiceProvider
      * @var string $kernelServiceClass Класс, реализующий сервис kernel.
      */
     protected $kernelServiceClass = AppKernel::class;
+
+    /**
+     * @var string $cacheDir Путь к кэшу.
+     */
+    protected $cacheDir = '/wp-content/cache';
 
     /**
      * ServiceProvider constructor.
@@ -677,9 +682,9 @@ class ServiceProvider
      *
      * @since 03.03.2021
      */
-    private function getPathCacheDirectory(string $filename) : string
+    protected function getPathCacheDirectory(string $filename) : string
     {
-        return $this->projectRoot . self::COMPILED_CONTAINER_DIR .'/containers/'. md5($filename);
+        return $this->projectRoot . $this->cacheDir . '/symfony-app/containers/' . md5($filename);
     }
 
     /**

@@ -55,19 +55,29 @@ class AppKernel extends Kernel
     protected $debug;
 
     /**
+     * @var ContainerInterface|null $kernelContainer Копия контейнера.
+     */
+    protected static $kernelContainer;
+
+    /**
+     * @var string $cacheDir Путь к директории с кэшом.
+     */
+    protected $cacheDir = '/wp-content/cache';
+
+    /**
+     * @var string $logDir Путь к директории с логами.
+     */
+    protected $logDir = '/logs';
+
+    /**
      * @var string $projectDir DOCUMENT_ROOT.
      */
-    private $projectDir = '';
+    protected $projectDir = '';
 
     /**
      * @var string $bundlesConfigFile Файл с конфигурацией бандлов.
      */
-    private $bundlesConfigFile = '/config/bundles.php';
-
-    /**
-     * @var ContainerInterface|null $kernelContainer Копия контейнера.
-     */
-    protected static $kernelContainer;
+    protected $bundlesConfigFile = '/config/bundles.php';
 
     /**
      * AppKernel constructor.
@@ -79,7 +89,7 @@ class AppKernel extends Kernel
     {
         $this->environment = $environment;
         $this->debug = $debug;
-        $this->projectDir = $_SERVER['DOCUMENT_ROOT'];
+        $this->projectDir = $_SERVER['DOCUMENT_ROOT'] ?? '';
 
         $this->initializeBundles(); // Бандлы Symfony
         $this->registerStandaloneBundles(); // "Standalone" бандлы.
@@ -136,7 +146,7 @@ class AppKernel extends Kernel
      *
      * @return BundleInterface A BundleInterface instance
      *
-     * @throws InvalidArgumentException when the bundle is not enabled
+     * @throws InvalidArgumentException When the bundle is not enabled.
      */
     public function getBundle(string $name): BundleInterface
     {
@@ -188,7 +198,7 @@ class AppKernel extends Kernel
      */
     public function getRelativeCacheDir(): string
     {
-        return '/wp-content/cache/';
+        return $this->cacheDir;
     }
 
     /**
@@ -196,7 +206,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return $this->getProjectDir() . '/logs';
+        return $this->getProjectDir() . $this->logDir;
     }
 
     /**

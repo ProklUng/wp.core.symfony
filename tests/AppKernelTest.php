@@ -69,6 +69,43 @@ class AppKernelTest extends BaseTestCase
     }
 
     /**
+     * getProjectDir().
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetProjectDir() : void
+    {
+        $backup = $_SERVER['DOCUMENT_ROOT'];
+
+        $_SERVER['DOCUMENT_ROOT'] = null;
+
+        $this->obTestObject = new AppKernel('dev', true);
+        $result = $this->obTestObject->getProjectDir();
+
+        $this->assertNotEmpty($result, 'Пустой DOCUMENT_ROOT.');
+
+        $_SERVER['DOCUMENT_ROOT'] = $backup;
+    }
+
+    /**
+     * getCacheDir().
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetCacheDir() : void
+    {
+        $this->obTestObject = new AppKernel('dev', true);
+        $result = $this->obTestObject->getCacheDir();
+
+        $this->assertStringContainsString(
+            '/wp-content/cache',
+            $result
+        );
+    }
+
+    /**
      * Тестовый локатор.
      *
      * @return ContainerInterface
