@@ -339,6 +339,9 @@ class ServiceProvider
         }
 
         static::$containerBuilder = null;
+
+        $this->bundles = [];
+        BundlesLoader::clearBundlesMap();
     }
 
     /**

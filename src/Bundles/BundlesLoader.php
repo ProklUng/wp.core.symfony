@@ -180,6 +180,16 @@ class BundlesLoader
     }
 
     /**
+     * Очистить инстанцы бандлов.
+     *
+     * @return void
+     */
+    public static function clearBundlesMap() : void
+    {
+        static::$bundlesMap[static::class] =  [];
+    }
+
+    /**
      * Boot bundles.
      *
      * @param ContainerInterface $container Контейнер.

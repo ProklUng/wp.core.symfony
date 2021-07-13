@@ -24,6 +24,9 @@ class MicroServiceProviderTest extends WordpressableTestCase
      */
     protected $obTestObject;
 
+    /**
+     * @var string $config
+     */
     private $config = '/Fixtures/config/test_micro_container.yaml';
 
     /**
