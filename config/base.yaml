@@ -24,6 +24,12 @@ services:
   Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface: '@parameter_bag'
   Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface: '@parameter_bag'
 
+  event_dispatcher:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+
+  Symfony\Component\EventDispatcher\EventDispatcher: '@event_dispatcher'
+  Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
+
   # Запрос.
   app.request:
     class: Prokl\ServiceProvider\Services\AppRequest
