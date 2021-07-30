@@ -284,3 +284,13 @@ $kernel = delegatedContainer()->get('my_module_id.service');
 ```
 
 Делегированный контейнер - автономный контейнер, сформированные в модуле, плагине и тому подобных местах.
+
+В контейнере он помечается тэгом `delegated.container` (их может быть сколь угодно много):
+
+```yaml
+  module_notifier_container:
+    class: Symfony\Component\DependencyInjection\ContainerInterface
+    factory: ['Proklung\Notifier\DI\Services', 'getInstance']
+    tags:
+      - { name: 'delegated.container' }
+```
