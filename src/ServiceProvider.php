@@ -87,11 +87,6 @@ class ServiceProvider
     private const COMPILED_CONTAINER_FILE = '/container.php';
 
     /**
-     * @const string COMPILED_CONTAINER_DIR Путь к скомпилированному контейнеру.
-     */
-    private const COMPILED_CONTAINER_DIR = '/wp-content/cache';
-
-    /**
      * @const string CONFIG_EXTS Расширения конфигурационных файлов.
      */
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
@@ -100,11 +95,6 @@ class ServiceProvider
      * @var ContainerBuilder $containerBuilder Контейнер.
      */
     protected static $containerBuilder;
-
-    /**
-     * @var ContainerInterface[] $delegatedContainers Делегированные контейнеры.
-     */
-    protected static $delegatedContainers = [];
 
     /**
      * @var ShowErrorScreen $errorHandler Обработчик ошибок.
@@ -262,32 +252,6 @@ class ServiceProvider
     {
         /** @psalm-suppress PropertyTypeCoercion */
         static::$containerBuilder = $container; // @phpstan-ignore-line
-    }
-
-    /**
-     * Задать делегированный контейнер.
-     *
-     * @param ContainerInterface $container Делегированный контейнер.
-     *
-     * @return void
-     *
-     * @since 21.03.2021
-     */
-    public static function addDelegatedContainer(ContainerInterface $container) : void
-    {
-        static::$delegatedContainers[get_class($container)] = $container; // @phpstan-ignore-line
-    }
-
-    /**
-     * Все делегированные контейнеры.
-     *
-     * @return ContainerInterface[]
-     *
-     * @since 21.03.2021
-     */
-    public function getDelegatedContainers() : array
-    {
-        return static::$delegatedContainers;
     }
 
     /**
@@ -1014,14 +978,6 @@ class ServiceProvider
             /** @psalm-suppress PossiblyNullReference */
             if (static::$containerBuilder->has(...$args)) {
                 return static::$containerBuilder->get(...$args);
-            }
-
-            // Попытка достать сервис из делегированных контейнеров.
-            foreach (static::$delegatedContainers as $delegateContainer) {
-                /** @psalm-suppress RedundantConditionGivenDocblockType */
-                if ($delegateContainer && $delegateContainer->has(...$args)) {
-                    return $delegateContainer->get(...$args);
-                }
             }
 
             throw new Exception(
