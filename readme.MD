@@ -265,6 +265,7 @@ Local\PostTypes\InstagramPostType:
 - `app.request` - конвертор глобалов в Request
 - `custom.post.type.registrator` - регистратор кастомных типов постов в Wordpress
 - синонимы сервиса `kernel`.
+- `delegated_container_manipulator` - манипулятор делегированными контейнерами.
  
 
 ## Хэлперы
@@ -274,3 +275,12 @@ Local\PostTypes\InstagramPostType:
 ```php
 $kernel = container()->get('kernel');
 ```
+
+2) `delegatedContainer()` - отдает экземпляр манипулятора (реализующего интерфейс `Symfony\Component\DependencyInjection\ContainerInterface`) 
+делегированными контейнерами.
+
+```php
+$kernel = delegatedContainer()->get('my_module_id.service');
+```
+
+Делегированный контейнер - автономный контейнер, сформированные в модуле, плагине и тому подобных местах.

@@ -48,6 +48,12 @@ services:
     class: Prokl\ServiceProvider\Services\AppRequest
     factory: ['@app.request', 'getRequestUri']
 
+  # Манипуляции с делегированными контейнерами.
+  delegated_container_manipulator:
+    public: true
+    class: Prokl\ServiceProvider\Utils\DelegatedContainer\Manipulator
+    arguments: [!tagged delegated.container]
+
   #############
   # Wordpress
   #############
