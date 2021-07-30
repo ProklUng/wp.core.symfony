@@ -280,7 +280,7 @@ $kernel = container()->get('kernel');
 делегированными контейнерами.
 
 ```php
-$kernel = delegatedContainer()->get('my_module_id.service');
+$moduleService = delegatedContainer()->get('my_module_id.service');
 ```
 
 Делегированный контейнер - автономный контейнер, сформированные в модуле, плагине и тому подобных местах.
