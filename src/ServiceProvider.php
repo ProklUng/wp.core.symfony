@@ -7,6 +7,7 @@ use Prokl\ServiceProvider\Bundles\BundlesLoader;
 use Prokl\ServiceProvider\Framework\AutoconfigureConfig;
 use Prokl\ServiceProvider\Framework\SymfonyCompilerPassBag;
 use InvalidArgumentException;
+use Prokl\ServiceProvider\Interfaces\ErrorHandlerInterface;
 use Prokl\ServiceProvider\Utils\ContextDetector;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
@@ -97,7 +98,7 @@ class ServiceProvider
     protected static $containerBuilder;
 
     /**
-     * @var ShowErrorScreen $errorHandler Обработчик ошибок.
+     * @var ErrorHandlerInterface $errorHandler Обработчик ошибок.
      */
     private $errorHandler;
 

@@ -146,3 +146,4 @@ services:
     class: Prokl\ServiceProvider\ShowErrorScreen
 
   Prokl\ServiceProvider\ShowErrorScreen: '@die_text'
+  Prokl\ServiceProvider\Interfaces\ErrorHandlerInterface: '@die_text'

@@ -3,6 +3,7 @@
 namespace Prokl\ServiceProvider;
 
 use Exception;
+use Prokl\ServiceProvider\Interfaces\ErrorHandlerInterface;
 use RuntimeException;
 use WP_Error;
 
@@ -12,7 +13,7 @@ use WP_Error;
  *
  * @since 30.09.2020 Рефакторинг.
  */
-class ShowErrorScreen
+class ShowErrorScreen implements ErrorHandlerInterface
 {
     /**
      * @var string $message Сообщение об ошибке.
@@ -33,11 +34,7 @@ class ShowErrorScreen
     }
 
     /**
-     * Показать экран.
-     * The site is experiencing technical difficulties.
-     * Но со своим текстом.
-     *
-     * @param string $errorMessage Текст сообщения.
+     * @inheritdoc
      *
      * @return boolean|null
      * @throws RuntimeException Ошибки под PHPUnit.
