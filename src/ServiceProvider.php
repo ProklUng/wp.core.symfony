@@ -319,7 +319,9 @@ class ServiceProvider
         try {
             $this->initContainer($this->filename);
         } catch (Exception $e) {
-            $this->errorHandler->die('Ошибка сервис-контейнера: '.$e->getMessage());
+            $this->errorHandler->die(
+                'Ошибка сервис-контейнера: '.$e->getMessage() . ' in ' . $e->getFile() . ' ' . $e->getLine()
+            );
 
             return;
         }
