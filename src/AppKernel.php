@@ -264,7 +264,7 @@ class AppKernel extends Kernel
             'kernel.cache_dir' => realpath($this->getCacheDir()),
             'kernel.cache_dir.relative' => $this->getRelativeCacheDir(),
             'kernel.logs_dir' => $this->getLogDir(),
-            'kernel.http.host' => $_SERVER['HTTP_HOST'],
+            'kernel.http.host' => $this->getHttpHost(),
             'kernel.site.host' => $this->getSiteHost(),
             'kernel.bundles' => $bundlesMetaData['kernel.bundles'],
             'kernel.bundles_metadata' => $bundlesMetaData['kernel.bundles_metadata'],
@@ -400,7 +400,7 @@ class AppKernel extends Kernel
      */
     private function getSiteHost() : string
     {
-        return $this->getSchema() . (array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : '');
+        return $this->getSchema() . $this->getHttpHost();
     }
 
     /**
@@ -412,8 +412,33 @@ class AppKernel extends Kernel
      */
     private function getSchema() : string
     {
-        return (array_key_exists('HTTPS', $_SERVER)
-            && ($_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] === 443)
-        ) ? 'https://' : 'http://';
+        if (!array_key_exists('HTTPS', $_SERVER)
+            && (array_key_exists('HTTPS', $_ENV) && $_ENV['HTTPS'] === 'off')) {
+            return 'http://';
+        }
+
+        if (!array_key_exists('HTTPS', $_SERVER)
+            && (array_key_exists('HTTPS', $_ENV) && $_ENV['HTTPS'] === 'on')) {
+            return 'https://';
+        }
+
+        return array_key_exists('HTTPS', $_SERVER) && ($_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] === 443) ? 'https://' : 'http://';
+    }
+
+    /**
+     * HTTP_HOST с учетом CLI. Если пусто, то берется из переменной окружения.
+     *
+     * @return string
+     *
+     * @since 03.08.2021
+     */
+    private function getHttpHost() : string
+    {
+        if (!array_key_exists('HTTP_HOST', $_SERVER)
+            && array_key_exists('HTTP_HOST', $_ENV)) {
+            return $_ENV['HTTP_HOST'];
+        }
+
+        return (string)$_SERVER['HTTP_HOST'];
     }
 }
