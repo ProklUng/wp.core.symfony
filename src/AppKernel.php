@@ -80,6 +80,11 @@ class AppKernel extends Kernel
     protected $bundlesConfigFile = '/config/bundles.php';
 
     /**
+     * @var string $warmupDir
+     */
+    protected $warmupDir;
+
+    /**
      * AppKernel constructor.
      *
      * @param string  $environment Окружение.
@@ -254,6 +259,8 @@ class AppKernel extends Kernel
             'kernel.project_dir' => realpath($this->getProjectDir()) ?: $this->getProjectDir(),
             'kernel.environment' => $this->environment,
             'kernel.debug' => $this->debug,
+            'kernel.runtime_environment' => '%env(default:kernel.environment:APP_RUNTIME_ENV)%',
+            'kernel.build_dir' => realpath($buildDir = $this->warmupDir ?: $this->getBuildDir()) ?: $buildDir,
             'kernel.cache_dir' => realpath($this->getCacheDir()),
             'kernel.cache_dir.relative' => $this->getRelativeCacheDir(),
             'kernel.logs_dir' => $this->getLogDir(),
