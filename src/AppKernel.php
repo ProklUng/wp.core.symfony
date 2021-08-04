@@ -363,6 +363,7 @@ class AppKernel extends Kernel
     /**
      * Initializes bundles.
      *
+     * @return void
      * @throws LogicException if two bundles share a common name.
      */
     protected function initializeBundles(): void
