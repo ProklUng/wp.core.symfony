@@ -380,18 +380,6 @@ class AppKernel extends Kernel
     }
 
     /**
-     * Gets the container class.
-     *
-     * @return string The container class
-     *
-     * @since 12.11.2020 Убрал $_ENV.
-     */
-    protected function getContainerClass(): string
-    {
-        return $this->environment === self::DEV_ENVIRONMENT ? ContainerBuilder::class : 'MyCachedContainer';
-    }
-
-    /**
      * Хост сайта.
      *
      * @return string
