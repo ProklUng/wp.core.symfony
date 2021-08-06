@@ -254,21 +254,6 @@ Local\PostTypes\InstagramPostType:
     tags:
       - { name: 'post.type' }
 ```
-
-## Автоматическое подхватывание расширений Twig
-
-Посредством Timber. Тэг `twig.extension`.
-
-```yaml
-  service.twig.parameter:
-    class: Local\Bundles\ParameterBundle\Twig\ParameterExtension
-    public: true
-    arguments:
-      - '@service.parameter'
-    tags:
-      - { name: twig.extension }
-```
-
 ## Сервисы по умолчанию
 
 Автоматом регистрируются несколько сервисов:
