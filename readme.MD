@@ -192,6 +192,18 @@ var_dump(container($micro)->getParameter('example'));
     tags: ['service.bootstrap']
 ```
 
+Поддерживается приоритет запуска. Тогда надо так:
+
+```yaml
+  app.options:
+    class: Local\Services\AppOptions
+    arguments: ['%kernel.environment%', '@parameter_bag']
+    tags: 
+      - { name: 'service.bootstrap', priority: 100 }
+```
+
+Сервис с приоритетом 100 запустится раньше сервиса с приоритетом 200.
+
 ## Автоматическая подвязка на хуки Wordpress
 
 Тэг: `custom.events.init`.
