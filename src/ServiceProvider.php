@@ -410,7 +410,6 @@ class ServiceProvider
         }
 
         // Подключение скомпилированного контейнера.
-        /** @noinspection PhpIncludeInspection */
         require_once $compiledContainerFile;
 
         $classCompiledContainerName = '\\'.$classCompiledContainerName;
