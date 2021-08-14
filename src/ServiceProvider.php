@@ -83,7 +83,7 @@ class ServiceProvider
     private const SERVICE_CONFIG_FILE = 'app/symfony/services.yaml';
 
     /**
-     * @const string COMPILED_CONTAINER_PATH Файл с сскомпилированным контейнером.
+     * @const string COMPILED_CONTAINER_PATH Файл с скомпилированным контейнером.
      */
     private const COMPILED_CONTAINER_FILE = '/container.php';
 
@@ -312,6 +312,7 @@ class ServiceProvider
     /**
      * Boot.
      *
+     * @return void
      * @throws Exception
      */
     private function boot() : void
@@ -332,7 +333,7 @@ class ServiceProvider
      *
      * @param string $fileName Имя конфигурационного файла.
      *
-     * @return mixed
+     * @return ContainerBuilder|Container
      * @throws Exception Ошибки контейнера.
      *
      * @since 26.09.2020 Рефакторинг.
