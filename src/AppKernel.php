@@ -117,7 +117,6 @@ class AppKernel extends Kernel
             return [];
         }
 
-        /* @noinspection PhpIncludeInspection */
         $contents = require $bundleConfigPath;
 
         foreach ($contents as $class => $envs) {
@@ -125,6 +124,27 @@ class AppKernel extends Kernel
                 yield new $class();
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBundles()
+    {
+        if (!empty($this->bundles)) {
+            return $this->bundles;
+        }
+
+        $this->bundles = [];
+        foreach ($this->registerBundles() as $bundle) {
+            $name = $bundle->getName();
+            if (isset($this->bundles[$name])) {
+                throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s".', $name));
+            }
+            $this->bundles[$name] = $bundle;
+        }
+
+        return $this->bundles;
     }
 
     /**
@@ -334,6 +354,20 @@ class AppKernel extends Kernel
         foreach (BundlesLoader::getBundlesMap() as $bundle) {
             $this->registerBundle($bundle);
         }
+    }
+
+    /**
+     * Путь к конфигу бандлов.
+     *
+     * @param string $bundlesConfigFile Путь к конфигу бандлов.
+     *
+     * @return $this
+     */
+    public function setBundlesConfigFile(string $bundlesConfigFile)
+    {
+        $this->bundlesConfigFile = $bundlesConfigFile;
+
+        return $this;
     }
 
     /**

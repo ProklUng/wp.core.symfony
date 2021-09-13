@@ -646,6 +646,7 @@ class ServiceProvider
             ->addTag('service.bootstrap')
             ->setAutoconfigured(true)
             ->setPublic(true)
+            ->addMethodCall('setBundlesConfigFile', [$this->pathBundlesConfig])
             ->setArguments([$this->environment, $this->debug]);
     }
 
