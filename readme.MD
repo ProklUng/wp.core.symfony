@@ -14,7 +14,7 @@ composer.json:
 ```
 
 ```bash
-composer require proklung/wp.core.symfony
+composer require proklung/wp-core-symfony
 ```
 
 ## Инициализация
